@@ -1,16 +1,29 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import App from "./App.tsx";
 import "./index.css";
 
-import { AuthContextProvider } from "@context/AuthContext.tsx";
+import { AuthContextProvider, useAuthContext } from "@context/AuthContext.tsx";
 import QueryContextProvider from "@context/QueryContext.tsx";
+import { RouterProvider } from "@tanstack/router";
+import { router } from "./router.tsx";
+
+import { MantineProvider } from "@mantine/core";
+
+const App = () => {
+  const { isLoading } = useAuthContext();
+
+  return <>{isLoading ? <p>Loading</p> : <RouterProvider router={router} />}</>;
+};
+
+//TODO update route package if they fix https://github.com/TanStack/router/issues/597
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
     <AuthContextProvider>
       <QueryContextProvider>
-        <App />
+        <MantineProvider>
+          <App />
+        </MantineProvider>
       </QueryContextProvider>
     </AuthContextProvider>
   </React.StrictMode>
