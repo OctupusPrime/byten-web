@@ -12,6 +12,7 @@ import { MantineProvider } from "@mantine/core";
 const App = () => {
   const { isLoading } = useAuthContext();
 
+  return;
   return <>{isLoading ? <p>Loading</p> : <RouterProvider router={router} />}</>;
 };
 
@@ -22,7 +23,7 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
     <AuthContextProvider>
       <QueryContextProvider queryClient={queryClient}>
         <MantineProvider>
-          <App />
+          <RouterProvider router={router} />
         </MantineProvider>
       </QueryContextProvider>
     </AuthContextProvider>
