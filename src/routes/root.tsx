@@ -1,4 +1,4 @@
-import { Link, Outlet, RootRoute } from "@tanstack/router";
+import { Outlet, RootRoute } from "@tanstack/router";
 import React from "react";
 import { RouterContext } from "src/router";
 
@@ -18,8 +18,8 @@ export const rootRoute = RootRoute.withRouterContext<RouterContext>()({
   component: () => {
     return (
       <>
-        <Link
-          to={"/login"}
+        {/* <Link
+          to={"/app/settings"}
           className={`block py-2 px-3 text-blue-700`}
           // Make "active" links bold
           activeProps={{ className: `font-bold` }}
@@ -33,7 +33,7 @@ export const rootRoute = RootRoute.withRouterContext<RouterContext>()({
           activeProps={{ className: `font-bold` }}
         >
           App
-        </Link>
+        </Link> */}
         <Outlet />
         <TanStackRouterDevtools position="bottom-right" />
       </>

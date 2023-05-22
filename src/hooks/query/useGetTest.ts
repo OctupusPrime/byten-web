@@ -1,5 +1,6 @@
 import axiosInstance from "@lib/axios";
-import { UseQueryOptions, useQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
+import { type QueryOptions } from "types/queryHooks";
 
 const reqTest = async () => {
   const { data } = await axiosInstance.get("test");
@@ -7,12 +8,7 @@ const reqTest = async () => {
   return data;
 };
 
-export default function useGetTest(
-  options?: Omit<
-    UseQueryOptions<unknown, unknown, any, ["test"]>,
-    "initialData"
-  >
-) {
+export default function useGetTest(options?: QueryOptions<["test"]>) {
   return useQuery({
     queryKey: ["test"],
     queryFn: reqTest,
