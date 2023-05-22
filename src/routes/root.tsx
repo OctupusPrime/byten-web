@@ -18,22 +18,6 @@ export const rootRoute = RootRoute.withRouterContext<RouterContext>()({
   component: () => {
     return (
       <>
-        {/* <Link
-          to={"/app/settings"}
-          className={`block py-2 px-3 text-blue-700`}
-          // Make "active" links bold
-          activeProps={{ className: `font-bold` }}
-        >
-          Login
-        </Link>
-        <Link
-          to={"/app"}
-          className={`block py-2 px-3 text-blue-700`}
-          // Make "active" links bold
-          activeProps={{ className: `font-bold` }}
-        >
-          App
-        </Link> */}
         <Outlet />
         <TanStackRouterDevtools position="bottom-right" />
       </>

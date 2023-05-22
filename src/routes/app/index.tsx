@@ -2,6 +2,7 @@ import { Outlet, Route, useNavigate } from "@tanstack/router";
 import { rootRoute } from "../root";
 import { useAuthContext } from "@context/AuthContext";
 import { useEffect } from "react";
+import AppNavBar from "@components/AppNavBar";
 
 export const appRoute = new Route({
   getParentRoute: () => rootRoute,
@@ -28,8 +29,11 @@ function App() {
   if (isLoading) return <></>;
 
   return (
-    <>
-      <Outlet />
-    </>
+    <div className="pl-60">
+      <AppNavBar />
+      <main className="max-w-3xl mx-auto w-full p-3 md">
+        <Outlet />
+      </main>
+    </div>
   );
 }

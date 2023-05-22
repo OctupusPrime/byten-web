@@ -36,38 +36,38 @@ function Settings() {
 
   return (
     <>
-      <div className="max-w-2xl mx-auto w-full p-3">
-        <h1 className="text-center text-2xl font-semibold mt-3 dark:text-white">
-          Settings
-        </h1>
+      <h1 className="text-center text-2xl font-semibold mt-3 dark:text-white">
+        Settings
+      </h1>
 
-        <SettingsSection title="Theme" description="Change app appearance.">
-          <SegmentedControl
-            value={theme}
-            onChange={setTheme}
-            data={[
-              { label: "Light", value: "light" },
-              { label: "Auto", value: "auto" },
-              { label: "Dark", value: "dark" },
-            ]}
-            classNames={{
-              root: "mt-2 sm:mt-0",
-            }}
-          />
-        </SettingsSection>
-        <SettingsSection title="Localization">
-          <Select
-            value={localization}
-            onChange={handleLocalizationChange}
-            data={[
-              { value: "en", label: "English (US)" },
-              { value: "ua", label: "Українська (UA)" },
-              { value: "ru", label: "Русcкий (RU)" },
-            ]}
-          />
-        </SettingsSection>
-        <p>{t("test")}</p>
-      </div>
+      <SettingsSection title="Theme" description="Change app appearance.">
+        <SegmentedControl
+          value={theme}
+          onChange={setTheme}
+          data={[
+            { label: "Light", value: "light" },
+            { label: "Auto", value: "auto" },
+            { label: "Dark", value: "dark" },
+          ]}
+          classNames={{
+            root: "mt-2 sm:mt-0",
+          }}
+        />
+      </SettingsSection>
+      <SettingsSection title="Localization">
+        <Select
+          value={localization}
+          onChange={handleLocalizationChange}
+          data={[
+            { value: "en", label: "English (US)" },
+            { value: "ua", label: "Українська (UA)" },
+            { value: "ru", label: "Русcкий (RU)" },
+          ]}
+        />
+      </SettingsSection>
+      <p>{t("test")}</p>
+      <span className="material-icon">settings</span>
+      <span className="material-icon-filled text-4xl">settings</span>
     </>
   );
 }
