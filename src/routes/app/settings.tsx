@@ -8,6 +8,7 @@ import {
 import { SegmentedControl, Select } from "@mantine/core";
 import { Locale } from "types/i18n";
 import { useTranslation } from "react-i18next";
+import Icon from "@components/Icon";
 
 export const appSettingsRoute = new Route({
   getParentRoute: () => appRoute,
@@ -66,8 +67,7 @@ function Settings() {
         />
       </SettingsSection>
       <p>{t("test")}</p>
-      <span className="material-icon">settings</span>
-      <span className="material-icon-filled text-4xl">settings</span>
+      <Icon name="settings" className="text-3xl" filled />
     </>
   );
 }
