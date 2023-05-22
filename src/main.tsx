@@ -1,6 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
+import "@lib/i18.ts";
 
 import { AuthContextProvider } from "@context/AuthContext.tsx";
 import QueryContextProvider from "@context/QueryContext.tsx";
