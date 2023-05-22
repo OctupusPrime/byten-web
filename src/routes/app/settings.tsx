@@ -1,22 +1,38 @@
 import { Route } from "@tanstack/router";
 import { appRoute } from ".";
-import { useThemeStore } from "@features/settings";
-import { SegmentedControl } from "@mantine/core";
+import {
+  SettingsSection,
+  useLocalizationStore,
+  useThemeStore,
+} from "@features/settings";
+import { SegmentedControl, Select } from "@mantine/core";
+import { Locale } from "types/i18n";
+import { useTranslation } from "react-i18next";
 
 export const appSettingsRoute = new Route({
   getParentRoute: () => appRoute,
   path: "settings",
   component: Settings,
-  // loader: ({ context }) => {
-  //   console.log("queryContext", context.queryClient);
-  // },
 });
 
 function Settings() {
+  const { i18n, t } = useTranslation();
+
   const [theme, setTheme] = useThemeStore((state) => [
     state.state,
     state.changeTheme,
   ]);
+
+  const [localization, setLocalization] = useLocalizationStore((state) => [
+    state.state,
+    state.changeLocale,
+  ]);
+
+  const handleLocalizationChange = (lang: Locale) => {
+    setLocalization(lang);
+
+    i18n.changeLanguage(lang);
+  };
 
   return (
     <>
@@ -25,13 +41,7 @@ function Settings() {
           Settings
         </h1>
 
-        <div className="mt-4 flex justify-between gap-2 items-center flex-col sm:flex-row">
-          <div className="">
-            <h2 className="text-lg font-medium dark:text-white">Theme</h2>
-            <p className="text-sm mt-1 dark:text-white">
-              Change app appearance to your prefered.
-            </p>
-          </div>
+        <SettingsSection title="Theme" description="Change app appearance.">
           <SegmentedControl
             value={theme}
             onChange={setTheme}
@@ -44,10 +54,19 @@ function Settings() {
               root: "mt-2 sm:mt-0",
             }}
           />
-        </div>
-        {/* <button onClick={() => changeTheme("light")}>Light</button>
-        <button onClick={() => changeTheme("auto")}>Auto</button>
-        <button onClick={() => changeTheme("dark")}>Dark</button> */}
+        </SettingsSection>
+        <SettingsSection title="Localization">
+          <Select
+            value={localization}
+            onChange={handleLocalizationChange}
+            data={[
+              { value: "en", label: "English (US)" },
+              { value: "ua", label: "Українська (UA)" },
+              { value: "ru", label: "Русcкий (RU)" },
+            ]}
+          />
+        </SettingsSection>
+        <p>{t("test")}</p>
       </div>
     </>
   );

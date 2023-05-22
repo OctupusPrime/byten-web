@@ -18,12 +18,10 @@ const changeTheme = (theme: "light" | "auto" | "dark") => {
 
   if (parsedTheme === "dark") {
     document.documentElement.classList.add("dark");
-    document.documentElement.classList.remove("light");
     return;
   }
 
   document.documentElement.classList.remove("dark");
-  document.documentElement.classList.add("light");
 };
 
 export { getThemeValue, changeTheme };
