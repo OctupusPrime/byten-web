@@ -1,4 +1,4 @@
-import { Route, useNavigate } from "@tanstack/router";
+import { Outlet, Route, useNavigate } from "@tanstack/router";
 import { rootRoute } from "../root";
 import { useAuthContext } from "@context/AuthContext";
 import { useEffect } from "react";
@@ -13,26 +13,23 @@ export const appRoute = new Route({
 });
 
 function App() {
-  const { session, signOut } = useAuthContext();
-
   const navigate = useNavigate();
+  const { session, isLoading } = useAuthContext();
 
   useEffect(() => {
+    if (isLoading) return;
+
     if (!session)
       navigate({
         to: "/login",
       });
-  }, [session]);
+  }, [session, isLoading]);
+
+  if (isLoading) return <></>;
 
   return (
     <>
-      <p>App</p>
-      <button
-        className="mx-auto p-2 bg-slate-200 rounded-md mt-2 text-lg"
-        onClick={signOut}
-      >
-        logout
-      </button>
+      <Outlet />
     </>
   );
 }

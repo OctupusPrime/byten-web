@@ -15,7 +15,7 @@
 
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./src/*"],
+      "types/*": ["./src/types/*"],
       "@service/*": ["./src/service/*"],
       "@assets/*": ["./src/assets/*"],
       "@context/*": ["./src/context/*"],

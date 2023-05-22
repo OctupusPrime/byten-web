@@ -1,6 +1,6 @@
 import axiosInstance from "@lib/axios";
 import { useQuery } from "@tanstack/react-query";
-import { type QueryOptions } from "@/types/queryHooks";
+import { type QueryOptions } from "types/queryHooks";
 
 const reqTest = async () => {
   const { data } = await axiosInstance.get("test");

@@ -1,16 +1,17 @@
 import { Router } from "@tanstack/router";
+import { QueryClient } from "@tanstack/react-query";
 
 //routes
 import { rootRoute } from "./routes/root";
 import { indexRoute } from "./routes";
 import { loginRoute } from "./routes/login";
 import { appRoute } from "./routes/app";
-import { QueryClient } from "@tanstack/react-query";
+import { appSettingsRoute } from "./routes/app/settings";
 
 export const routeTree = rootRoute.addChildren([
   indexRoute,
   loginRoute,
-  appRoute,
+  appRoute.addChildren([appSettingsRoute]),
 ]);
 
 export type RouterContext = {
