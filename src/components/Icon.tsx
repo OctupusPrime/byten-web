@@ -1,15 +1,16 @@
 import { type DetailedHTMLProps, type HTMLAttributes } from "react";
 import { twMerge } from "tailwind-merge";
-import { IconsName } from "types/material-symbols";
+import { type IconsName } from "types/material-symbols";
 
 export interface IconProps
   extends DetailedHTMLProps<HTMLAttributes<HTMLSpanElement>, HTMLSpanElement> {
   name: IconsName;
+  size?: number;
   filled?: boolean;
 }
 
 const Icon = (props: IconProps) => {
-  const { name, className, filled, ...others } = props;
+  const { name, className, filled, size = 24, ...others } = props;
 
   return (
     <i
@@ -18,6 +19,9 @@ const Icon = (props: IconProps) => {
         filled ? "material-icon-filled" : "material-icon",
         className
       )}
+      style={{
+        fontSize: size,
+      }}
     >
       {name}
     </i>

@@ -48,7 +48,7 @@ const QueryContextProvider = ({ children, queryClient }: QueryContextProps) => {
       }}
     >
       {children}
-      <ReactQueryDevtools />
+      <ReactQueryDevtools position="top-right" />
     </PersistQueryClientProvider>
   );
 };

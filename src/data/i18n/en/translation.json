@@ -1,8 +1,14 @@
 {
-  "title": "Welcome {{name}}, to react using react-i18next fully type-safe",
-  "description": {
-    "part1": "This is a simple example.",
-    "part2": "😉"
+  "navbar": {
+    "links": {
+      "dashboard": "Dashboard",
+      "ai": "Ai",
+      "settings": "Settings"
+    }
   },
-  "test": "test text"
+  "settings": {
+    "actions": {
+      "logout": "Logout"
+    }
+  }
 }

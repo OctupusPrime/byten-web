@@ -22,9 +22,10 @@
   word-wrap: normal;
   direction: ltr;
   -webkit-font-feature-settings: "liga";
+  font-feature-settings: "liga";
   -webkit-font-smoothing: antialiased;
   user-select: none;
-  font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 48;
+  font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24;
 }
 
 .material-icon-filled {
@@ -39,17 +40,41 @@
   word-wrap: normal;
   direction: ltr;
   -webkit-font-feature-settings: "liga";
+  font-feature-settings: "liga";
   -webkit-font-smoothing: antialiased;
   user-select: none;
-  font-variation-settings: "FILL" 1, "wght" 400, "GRAD" 0, "opsz" 48;
+  font-variation-settings: "FILL" 1, "wght" 400, "GRAD" 0, "opsz" 24;
 }
 
 @layer base {
   html {
-    @apply bg-neutral-200;
+    @apply bg-white;
   }
 
   .dark {
-    @apply bg-neutral-800;
+    @apply bg-neutral-900;
+  }
+}
+
+@layer components {
+  .nav-link {
+    @apply flex gap-3 items-center p-2 rounded-md hover:bg-gray-50 dark:hover:bg-neutral-700 hover:text-blue-600 dark:text-gray-400 hover:dark:text-white;
+  }
+
+  .nav-link-active {
+    @apply bg-gray-50 dark:bg-neutral-700;
+  }
+  .nav-link-active span,
+  .nav-link-active i {
+    @apply text-blue-600 dark:text-white;
+  }
+
+  .mobal-nav-link {
+    @apply flex h-20 w-20 gap-2 flex-col items-center justify-center dark:text-gray-400;
+  }
+
+  .mobal-nav-link-active span,
+  .mobal-nav-link-active i {
+    @apply text-blue-600 dark:text-white;
   }
 }

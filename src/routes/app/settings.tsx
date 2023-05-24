@@ -66,8 +66,6 @@ function Settings() {
           ]}
         />
       </SettingsSection>
-      <p>{t("test")}</p>
-      <Icon name="settings" className="text-3xl" filled />
     </>
   );
 }
