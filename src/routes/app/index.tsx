@@ -29,10 +29,9 @@ function App() {
   if (isLoading) return <></>;
 
   return (
-    //className="pl-60"
     <div className="pl-0 pb-20 md:pl-60 md:pb-0">
       <AppNavBar />
-      <main className="max-w-3xl mx-auto w-full p-3 md">
+      <main className="max-w-3xl mx-auto w-full p-4">
         <Outlet />
       </main>
     </div>

@@ -7,11 +7,19 @@ import { indexRoute } from "./routes";
 import { loginRoute } from "./routes/login";
 import { appRoute } from "./routes/app";
 import { appSettingsRoute } from "./routes/app/settings";
+import { appAiRoute } from "./routes/app/ai";
+import { appDashboardRoute } from "./routes/app/dashboard";
+import { appTodayRoute } from "./routes/app/today";
 
 export const routeTree = rootRoute.addChildren([
   indexRoute,
   loginRoute,
-  appRoute.addChildren([appSettingsRoute]),
+  appRoute.addChildren([
+    appDashboardRoute,
+    appAiRoute,
+    appSettingsRoute,
+    appTodayRoute,
+  ]),
 ]);
 
 export type RouterContext = {

@@ -1,20 +1,20 @@
-import React from "react";
+// import React from "react";
 import { createSyncStoragePersister } from "@tanstack/query-sync-storage-persister";
 import { type QueryClient } from "@tanstack/react-query";
 import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client";
 import { type ReactNode } from "react";
 
-const ReactQueryDevtools =
-  process.env.NODE_ENV === "production"
-    ? () => null // Render nothing in production
-    : React.lazy(() =>
-        // Lazy load in development
-        import("@tanstack/react-query-devtools").then((res) => ({
-          default: res.ReactQueryDevtools,
-          // For Embedded Mode
-          // default: res.TanStackRouterDevtoolsPanel
-        }))
-      );
+// const ReactQueryDevtools =
+//   process.env.NODE_ENV === "production"
+//     ? () => null // Render nothing in production
+//     : React.lazy(() =>
+//         // Lazy load in development
+//         import("@tanstack/react-query-devtools").then((res) => ({
+//           default: res.ReactQueryDevtools,
+//           // For Embedded Mode
+//           // default: res.TanStackRouterDevtoolsPanel
+//         }))
+//       );
 
 const persister = createSyncStoragePersister({
   storage: window.localStorage,
@@ -48,7 +48,7 @@ const QueryContextProvider = ({ children, queryClient }: QueryContextProps) => {
       }}
     >
       {children}
-      <ReactQueryDevtools position="top-right" />
+      {/* <ReactQueryDevtools position="top-right" /> */}
     </PersistQueryClientProvider>
   );
 };

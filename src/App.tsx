@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import "./index.css";
 import "@lib/i18.ts";
 
-import { MantineProvider } from "@mantine/core";
+import { MantineProvider, createEmotionCache } from "@mantine/core";
 
 import { router } from "./router.tsx";
 import { RouterProvider } from "@tanstack/router";
@@ -14,6 +14,8 @@ import {
 
 import { getThemeValue } from "@utils/theme.ts";
 import { useTranslation } from "react-i18next";
+
+const myCache = createEmotionCache({ key: "mantine" });
 
 const App = () => {
   const { i18n } = useTranslation();
@@ -31,6 +33,7 @@ const App = () => {
       theme={{
         colorScheme: getThemeValue(theme),
       }}
+      emotionCache={myCache}
     >
       <RouterProvider router={router} />
     </MantineProvider>

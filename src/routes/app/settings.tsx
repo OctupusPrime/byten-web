@@ -8,7 +8,6 @@ import {
 import { SegmentedControl, Select } from "@mantine/core";
 import { Locale } from "types/i18n";
 import { useTranslation } from "react-i18next";
-import Icon from "@components/Icon";
 
 export const appSettingsRoute = new Route({
   getParentRoute: () => appRoute,
@@ -17,7 +16,7 @@ export const appSettingsRoute = new Route({
 });
 
 function Settings() {
-  const { i18n, t } = useTranslation();
+  const { i18n } = useTranslation();
 
   const [theme, setTheme] = useThemeStore((state) => [
     state.state,
