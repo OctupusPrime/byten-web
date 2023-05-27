@@ -1,166 +1,113 @@
-import React, { Fragment, useContext, useEffect, useRef } from "react";
-import { IProps } from "../../Editor";
-import { EditorContext, PreviewType, ContextStore } from "../../Context";
-import { ICommand } from "../../commands";
-import Child from "./Child";
-import "./index.css";
+import { useContext } from "react";
+import { EditorContext } from "../../Context";
+import * as commands from "../../commands";
+import ToolBarBtn from "./ToolBarBtn";
 
-export interface IToolbarProps extends IProps {
-  overflow?: boolean;
-  toolbarBottom?: boolean;
-  onCommand?: (command: ICommand<string>, groupName?: string) => void;
-  commands?: ICommand<string>[];
-  isChild?: boolean;
-}
+const NewToolBar = () => {
+  const { commandOrchestrator } = useContext(EditorContext);
 
-export function ToolbarItems(props: IToolbarProps) {
-  const { prefixCls, overflow } = props;
-  const {
-    fullscreen,
-    preview,
-    barPopup = {},
-    components,
-    commandOrchestrator,
-    dispatch,
-  } = useContext(EditorContext);
-  const originalOverflow = useRef("");
+  const handleExecuteCommand = (command: commands.ICommand) => {
+    if (!commandOrchestrator)
+      return console.error("commandOrchestrator is not defiend");
 
-  function handleClick(command: ICommand<string>, name?: string) {
-    if (!dispatch) return;
-    const state: ContextStore = { barPopup: { ...barPopup } };
-    if (command.keyCommand === "preview") {
-      state.preview = command.value as PreviewType;
-    }
-    if (command.keyCommand === "fullscreen") {
-      state.fullscreen = !fullscreen;
-    }
-    if (props.commands && command.keyCommand === "group") {
-      props.commands.forEach((item) => {
-        if (name === item.groupName) {
-          state.barPopup![name!] = true;
-        } else if (item.keyCommand) {
-          state.barPopup![item.groupName!] = false;
-        }
-      });
-    } else if (name || command.parent) {
-      Object.keys(state.barPopup || {}).forEach((keyName) => {
-        state.barPopup![keyName] = false;
-      });
-    }
-
-    if (Object.keys(state).length) {
-      dispatch({ ...state });
-    }
-    commandOrchestrator && commandOrchestrator.executeCommand(command);
-  }
-
-  useEffect(() => {
-    if (document && overflow) {
-      if (fullscreen) {
-        // prevent scroll on fullscreen
-        document.body.style.overflow = "hidden";
-      } else {
-        // get the original overflow only the first time
-        if (!originalOverflow.current) {
-          originalOverflow.current = window.getComputedStyle(
-            document.body,
-            null
-          ).overflow;
-        }
-        // reset to the original overflow
-        document.body.style.overflow = originalOverflow.current;
-      }
-    }
-  }, [fullscreen, originalOverflow, overflow]);
+    commandOrchestrator.executeCommand(command);
+  };
 
   return (
-    <ul>
-      {(props.commands || []).map((item, idx) => {
-        if (item.keyCommand === "divider") {
-          return (
-            <li
-              key={idx}
-              {...item.liProps}
-              className={`${prefixCls}-toolbar-divider`}
-            />
-          );
-        }
-        if (!item.keyCommand) return <Fragment key={idx} />;
-        const activeBtn =
-          (fullscreen && item.keyCommand === "fullscreen") ||
-          (item.keyCommand === "preview" && preview === item.value);
-        const childNode =
-          item.children && typeof item.children === "function"
-            ? item.children({
-                getState: () => commandOrchestrator!.getState(),
-                textApi: commandOrchestrator
-                  ? commandOrchestrator!.textApi
-                  : undefined,
-                close: () => handleClick({}, item.groupName),
-                execute: () => handleClick({ execute: item.execute }),
-                dispatch,
-              })
-            : undefined;
-        const disabled =
-          barPopup &&
-          preview &&
-          preview === "preview" &&
-          !/(preview|fullscreen)/.test(item.keyCommand);
-        const render = components?.toolbar || item.render;
-        const com = (
-          render && typeof render === "function"
-            ? render(item, !!disabled, handleClick, idx)
-            : null
-        ) as React.ReactElement;
-        return (
-          <li key={idx} {...item.liProps} className={activeBtn ? `active` : ""}>
-            {com && React.isValidElement(com) && com}
-            {!com && !item.buttonProps && item.icon}
-            {!com &&
-              item.buttonProps &&
-              React.createElement(
-                "button",
-                {
-                  type: "button",
-                  key: idx,
-                  disabled,
-                  "data-name": item.name,
-                  ...item.buttonProps,
-                  onClick: (
-                    evn: React.MouseEvent<HTMLButtonElement, MouseEvent>
-                  ) => {
-                    evn.stopPropagation();
-                    handleClick(item, item.groupName);
-                  },
-                },
-                item.icon
-              )}
-            {item.children && (
-              <Child
-                overflow={overflow}
-                groupName={item.groupName}
-                prefixCls={prefixCls}
-                children={childNode}
-                commands={
-                  Array.isArray(item.children) ? item.children : undefined
-                }
-              />
-            )}
-          </li>
-        );
-      })}
-    </ul>
-  );
-}
+    <div className="md-toolbar-wrapper flex flex-wrap gap-4 border-b border-gray-200 px-3 py-2.5">
+      <div className="flex items-center divide-x divide-gray-200 [&>:first-child]:rounded-l-sm [&>:first-child]:border-l [&>:last-child]:rounded-r-sm [&>:last-child]:!border-r">
+        <ToolBarBtn
+          icon="format_bold"
+          command={commands.bold}
+          onClick={handleExecuteCommand}
+        />
+        <ToolBarBtn
+          icon="format_italic"
+          command={commands.italic}
+          onClick={handleExecuteCommand}
+        />
+        <ToolBarBtn
+          icon="format_strikethrough"
+          command={commands.strikethrough}
+          onClick={handleExecuteCommand}
+        />
+        <ToolBarBtn
+          icon="vertical_distribute"
+          command={commands.hr}
+          onClick={handleExecuteCommand}
+        />
 
-export default function Toolbar(props: IToolbarProps = {}) {
-  const { prefixCls, toolbarBottom, isChild } = props;
-  const { commands, extraCommands } = useContext(EditorContext);
-  const bottomClassName = toolbarBottom ? "bottom" : "";
-  return (
-    <div className={`${prefixCls}-toolbar ${bottomClassName}`}>
-      <ToolbarItems {...props} commands={props.commands || commands || []} />
-      {!isChild && <ToolbarItems {...props} commands={extraCommands || []} />}
+        <ToolBarBtn
+          icon="code"
+          command={commands.code}
+          onClick={handleExecuteCommand}
+        />
+        <ToolBarBtn
+          icon="image"
+          command={commands.image}
+          onClick={handleExecuteCommand}
+        />
+      </div>
+      <div className="flex items-center divide-x divide-gray-200 [&>:first-child]:rounded-l-sm [&>:first-child]:border-l [&>:last-child]:rounded-r-sm [&>:last-child]:!border-r">
+        <ToolBarBtn
+          icon="format_h1"
+          command={commands.title1}
+          onClick={handleExecuteCommand}
+        />
+        <ToolBarBtn
+          icon="format_h2"
+          command={commands.title2}
+          onClick={handleExecuteCommand}
+        />
+        <ToolBarBtn
+          icon="format_h3"
+          command={commands.title3}
+          onClick={handleExecuteCommand}
+        />
+        <ToolBarBtn
+          icon="format_h4"
+          command={commands.title4}
+          onClick={handleExecuteCommand}
+        />
+      </div>
+      <div className="flex items-center divide-x divide-gray-200 [&>:first-child]:rounded-l-sm [&>:first-child]:border-l [&>:last-child]:rounded-r-sm [&>:last-child]:!border-r">
+        <ToolBarBtn
+          icon="format_quote"
+          command={commands.quote}
+          onClick={handleExecuteCommand}
+        />
+        <ToolBarBtn
+          icon="frame_source"
+          command={commands.codeBlock}
+          onClick={handleExecuteCommand}
+        />
+      </div>
+      <div className="flex items-center divide-x divide-gray-200 [&>:first-child]:rounded-l-sm [&>:first-child]:border-l [&>:last-child]:rounded-r-sm [&>:last-child]:!border-r">
+        <ToolBarBtn
+          icon="add_link"
+          command={commands.link}
+          onClick={handleExecuteCommand}
+        />
+      </div>
+      <div className="flex items-center divide-x divide-gray-200 [&>:first-child]:rounded-l-sm [&>:first-child]:border-l [&>:last-child]:rounded-r-sm [&>:last-child]:!border-r">
+        <ToolBarBtn
+          icon="list"
+          command={commands.unorderedListCommand}
+          onClick={handleExecuteCommand}
+        />
+        <ToolBarBtn
+          icon="format_list_numbered"
+          command={commands.orderedListCommand}
+          onClick={handleExecuteCommand}
+        />
+        <ToolBarBtn
+          icon="checklist"
+          command={commands.checkedListCommand}
+          onClick={handleExecuteCommand}
+        />
+      </div>
     </div>
   );
-}
+};
+
+export default NewToolBar;

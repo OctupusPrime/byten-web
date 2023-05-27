@@ -976,6 +976,7 @@ type IconsName =
   | "forward_to_inbox"
   | "foundation"
   | "frame_person"
+  | "frame_source"
   | "free_cancellation"
   | "front_hand"
   | "front_loader"

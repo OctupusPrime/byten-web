@@ -22,7 +22,6 @@ import {
 } from "./commands";
 import { reducer, EditorContext, ContextStore, PreviewType } from "./Context";
 import "./index.css";
-import NewToolBar from "./components/Toolbar/NewToolBar";
 
 export interface IProps {
   prefixCls?: string;
@@ -73,14 +72,6 @@ export interface MDEditorProps
    */
   height?: CSSProperties["height"];
   /**
-   * Custom toolbar heigth
-   * @default 29px
-   *
-   * @deprecated toolbar height adaptive: https://github.com/uiwjs/react-md-editor/issues/427
-   *
-   */
-  toolbarHeight?: number;
-  /**
    * Show drag and drop tool. Set the height of the editor.
    */
   visibleDragbar?: boolean;
@@ -127,11 +118,6 @@ export interface MDEditorProps
   components?: {
     /** Use div to replace TextArea or re-render TextArea */
     textarea?: ITextAreaProps["renderTextarea"];
-    /**
-     * Override the default command element
-     * _`toolbar`_ < _`command[].render`_
-     */
-    toolbar?: ICommand["render"];
     /** Custom markdown preview */
     preview?: (
       source: string,
@@ -174,8 +160,6 @@ export interface MDEditorProps
   hideToolbar?: boolean;
   /** Whether to enable scrolling */
   enableScroll?: boolean;
-  /** Toolbar on bottom */
-  toolbarBottom?: boolean;
   /**
    * The **`direction`** property sets the direction of text, table columns, and horizontal overflow. Use `rtl` for languages written from right to left (like Hebrew or Arabic), and `ltr` for those written from left to right (like English and most other languages).
    *
@@ -225,7 +209,6 @@ const InternalMDEditor = (
     onStatistics,
     onHeightChange,
     hideToolbar,
-    toolbarBottom = false,
     components,
     renderTextarea,
     ...other
@@ -453,14 +436,7 @@ const InternalMDEditor = (
         onClick={containerClick}
         style={containerStyle}
       >
-        <NewToolBar commands={commands} />
-        {!hideToolbar && !toolbarBottom && (
-          <Toolbar
-            prefixCls={prefixCls}
-            overflow={overflow}
-            toolbarBottom={toolbarBottom}
-          />
-        )}
+        {!hideToolbar && <Toolbar />}
         <div className={`${prefixCls}-content`}>
           {/(edit|live)/.test(state.preview || "") && (
             <TextArea
@@ -482,13 +458,6 @@ const InternalMDEditor = (
             maxHeight={maxHeight!}
             minHeight={minHeight!}
             onChange={dragBarChange}
-          />
-        )}
-        {!hideToolbar && toolbarBottom && (
-          <Toolbar
-            prefixCls={prefixCls}
-            overflow={overflow}
-            toolbarBottom={toolbarBottom}
           />
         )}
       </div>

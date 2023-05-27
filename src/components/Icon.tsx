@@ -7,10 +7,11 @@ export interface IconProps
   name: IconsName;
   size?: number;
   filled?: boolean;
+  opsz?: number;
 }
 
 const Icon = (props: IconProps) => {
-  const { name, className, filled, size = 24, ...others } = props;
+  const { name, className, filled, size = 24, opsz = 24, ...others } = props;
 
   return (
     <i

@@ -1,6 +1,7 @@
 import MarkDownEditor, {
   type ICommand,
   EditorContext,
+  commands,
 } from "@components/MDEditor";
 import { useState, useContext } from "react";
 
@@ -25,32 +26,15 @@ const textToImage: ICommand = {
   },
 };
 
-const Toolbar = () => {
-  const { commandOrchestrator, commands } = useContext(EditorContext);
-
-  const handleH1 = () => {
-    console.log(commands);
-
-    if (commands?.[0]) commandOrchestrator?.executeCommand(commands[0]);
-  };
-
-  return (
-    <>
-      <button onClick={handleH1}>h1</button>
-    </>
-  );
-};
-
 const MDEditor = () => {
   const [value, setValue] = useState("");
 
   return (
     <>
-      <Toolbar />
       <MarkDownEditor
         value={value}
         onChange={(val) => setValue(val ?? "")}
-        commands={[textToImage]}
+        commands={[textToImage, commands.bold, commands.divider]}
         extraCommands={[]}
       />
     </>
