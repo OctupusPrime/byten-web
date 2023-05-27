@@ -1,9 +1,5 @@
-import MarkDownEditor, {
-  type ICommand,
-  EditorContext,
-  commands,
-} from "@components/MDEditor";
-import { useState, useContext } from "react";
+import MarkDownEditor, { type ICommand, commands } from "@components/MDEditor";
+import { useState } from "react";
 
 const textToImage: ICommand = {
   name: "Text To Image",

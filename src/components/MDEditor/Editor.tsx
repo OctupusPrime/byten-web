@@ -221,7 +221,7 @@ const InternalMDEditor = (
 
   const cls = [
     className,
-    "wmde-markdown-var",
+    "wmde-markdown",
     direction ? `${prefixCls}-${direction}` : null,
     prefixCls,
     state.preview ? `${prefixCls}-show-${state.preview}` : null,
