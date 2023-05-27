@@ -12,7 +12,6 @@ import MarkdownPreview, {
 } from "@uiw/react-markdown-preview";
 import TextArea, { ITextAreaProps } from "./components/TextArea";
 import Toolbar from "./components/Toolbar";
-import DragBar from "./components/DragBar";
 import {
   getCommands,
   getExtraCommands,
@@ -406,7 +405,6 @@ const InternalMDEditor = (
   const containerStyle = { ...other.style, height: state.height || "100%" };
   const containerClick = () =>
     dispatch({ barPopup: { ...setGroupPopFalse(state.barPopup) } });
-  const dragBarChange = (newHeight: number) => dispatch({ height: newHeight });
 
   const changeHandle = (evn: React.ChangeEvent<HTMLTextAreaElement>) => {
     onChange && onChange(evn.target.value, evn, state);
@@ -451,15 +449,6 @@ const InternalMDEditor = (
           )}
           {/(live|preview)/.test(state.preview || "") && mdPreview}
         </div>
-        {visibleDragbar && !state.fullscreen && (
-          <DragBar
-            prefixCls={prefixCls}
-            height={state.height as number}
-            maxHeight={maxHeight!}
-            minHeight={minHeight!}
-            onChange={dragBarChange}
-          />
-        )}
       </div>
     </EditorContext.Provider>
   );

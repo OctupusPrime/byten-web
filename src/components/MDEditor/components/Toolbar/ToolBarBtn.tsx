@@ -23,7 +23,7 @@ const ToolBarBtn = (props: ToolBarBtnProps) => {
   return (
     <button
       className={twMerge(
-        "grid h-6 w-6 place-items-center border-y border-gray-200 bg-white hover:bg-gray-100",
+        "grid h-6 w-6 place-items-center border-y border-gray-200 bg-white hover:bg-gray-100 disabled:opacity-40",
         className
       )}
       onClick={() => onClick(command)}

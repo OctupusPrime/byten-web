@@ -1,27 +1,31 @@
-import React from 'react';
-import { ContextStore, ExecuteCommandState } from '../Context';
-import { insertTextAtPosition } from '../utils/InsertTextAtPosition';
-import { bold } from './bold';
-import { code, codeBlock } from './code';
-import { comment } from './comment';
-import { divider } from './divider';
-import { fullscreen } from './fullscreen';
-import { group } from './group';
-import { hr } from './hr';
-import { image } from './image';
-import { italic } from './italic';
-import { link } from './link';
-import { checkedListCommand, orderedListCommand, unorderedListCommand } from './list';
-import { codeEdit, codeLive, codePreview } from './preview';
-import { quote } from './quote';
-import { strikethrough } from './strikeThrough';
-import { title } from './title';
-import { title1 } from './title1';
-import { title2 } from './title2';
-import { title3 } from './title3';
-import { title4 } from './title4';
-import { title5 } from './title5';
-import { title6 } from './title6';
+import React from "react";
+import { ContextStore, ExecuteCommandState } from "../Context";
+import { insertTextAtPosition } from "../utils/InsertTextAtPosition";
+import { bold } from "./bold";
+import { code, codeBlock } from "./code";
+import { comment } from "./comment";
+import { divider } from "./divider";
+import { fullscreen } from "./fullscreen";
+import { group } from "./group";
+import { hr } from "./hr";
+import { image } from "./image";
+import { italic } from "./italic";
+import { link } from "./link";
+import {
+  checkedListCommand,
+  orderedListCommand,
+  unorderedListCommand,
+} from "./list";
+import { codeEdit, codeLive, codePreview } from "./preview";
+import { quote } from "./quote";
+import { strikethrough } from "./strikeThrough";
+import { title } from "./title";
+import { title1 } from "./title1";
+import { title2 } from "./title2";
+import { title3 } from "./title3";
+import { title4 } from "./title4";
+import { title5 } from "./title5";
+import { title6 } from "./title6";
 
 export interface CommandOrchestrator {
   executeCommand(command: ICommand): void;
@@ -31,7 +35,7 @@ export interface ICommandChildHandle<T = string> extends ICommandBase<T> {
   children?: (handle: {
     close: () => void;
     execute: () => void;
-    getState?: TextAreaCommandOrchestrator['getState'];
+    getState?: TextAreaCommandOrchestrator["getState"];
     textApi?: TextAreaTextApi;
     dispatch?: React.Dispatch<ContextStore>;
   }) => React.ReactElement;
@@ -49,27 +53,29 @@ export interface ICommandBase<T> {
   groupName?: string;
   icon?: React.ReactElement;
   value?: T;
-  position?: 'right';
+  position?: "right";
   liProps?: React.LiHTMLAttributes<HTMLLIElement>;
   buttonProps?: React.ButtonHTMLAttributes<HTMLButtonElement> | null;
   render?: (
     command: ICommand<T>,
     disabled: boolean,
     executeCommand: (command: ICommand<T>, name?: string) => void,
-    index: number,
+    index: number
   ) => void | undefined | null | React.ReactElement;
   execute?: (
     state: ExecuteState,
     api: TextAreaTextApi,
     dispatch?: React.Dispatch<ContextStore>,
     executeCommandState?: ExecuteCommandState,
-    shortcuts?: string[],
+    shortcuts?: string[]
   ) => void;
 }
 
 export type ExecuteState = TextState & { command: ICommand };
 
-export type ICommand<T = string> = ICommandChildCommands<T> | ICommandChildHandle<T>;
+export type ICommand<T = string> =
+  | ICommandChildCommands<T>
+  | ICommandChildHandle<T>;
 
 export interface TextRange {
   start: number;
@@ -88,9 +94,9 @@ const getCommands: () => ICommand[] = () => [
   strikethrough,
   hr,
   group([title1, title2, title3, title4, title5, title6], {
-    name: 'title',
-    groupName: 'title',
-    buttonProps: { 'aria-label': 'Insert title', title: 'Insert title' },
+    name: "title",
+    groupName: "title",
+    buttonProps: { "aria-label": "Insert title", title: "Insert title" },
   }),
   divider,
   link,
@@ -105,7 +111,13 @@ const getCommands: () => ICommand[] = () => [
   checkedListCommand,
 ];
 
-const getExtraCommands: () => ICommand[] = () => [codeEdit, codeLive, codePreview, divider, fullscreen];
+const getExtraCommands: () => ICommand[] = () => [
+  codeEdit,
+  codeLive,
+  codePreview,
+  divider,
+  fullscreen,
+];
 
 function getStateFromTextArea(textArea: HTMLTextAreaElement): TextState {
   return {
@@ -114,7 +126,10 @@ function getStateFromTextArea(textArea: HTMLTextAreaElement): TextState {
       end: textArea.selectionEnd,
     },
     text: textArea.value,
-    selectedText: textArea.value?.slice(textArea.selectionStart, textArea.selectionEnd),
+    selectedText: textArea.value?.slice(
+      textArea.selectionStart,
+      textArea.selectionEnd
+    ),
   };
 }
 
@@ -165,11 +180,16 @@ class TextAreaCommandOrchestrator implements CommandOrchestrator {
     command: ICommand<string>,
     dispatch?: React.Dispatch<ContextStore>,
     state?: ExecuteCommandState,
-    shortcuts?: string[],
+    shortcuts?: string[]
   ): void {
-    console.log('state:', state);
     command.execute &&
-      command.execute({ command, ...getStateFromTextArea(this.textArea) }, this.textApi, dispatch, state, shortcuts);
+      command.execute(
+        { command, ...getStateFromTextArea(this.textArea) },
+        this.textApi,
+        dispatch,
+        state,
+        shortcuts
+      );
   }
 }
 

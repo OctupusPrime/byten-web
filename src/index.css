@@ -67,6 +67,12 @@
     @apply bg-white;
   }
 
+  html,
+  body,
+  #root {
+    @apply h-full;
+  }
+
   .dark {
     @apply bg-neutral-900;
   }

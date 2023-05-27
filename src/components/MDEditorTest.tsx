@@ -34,7 +34,15 @@ const MDEditor = () => {
       <MarkDownEditor
         value={value}
         onChange={(val) => setValue(val ?? "")}
-        commands={[textToImage, commands.bold, commands.divider]}
+        preview="edit"
+        commands={[
+          textToImage,
+          commands.bold,
+          commands.divider,
+          commands.codeEdit,
+          commands.codePreview,
+          commands.fullscreen,
+        ]}
         extraCommands={[]}
       />
     </>

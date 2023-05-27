@@ -31,6 +31,7 @@ export const codePreview: ICommand = {
   ) => {
     api.textArea.focus();
     if (shortcuts && dispatch && executeCommandState) {
+      console.log("hit dispatch");
       dispatch({ preview: "preview" });
     }
   },
