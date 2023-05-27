@@ -49,14 +49,6 @@ export interface MDEditorProps
     event?: React.ChangeEvent<HTMLTextAreaElement>,
     state?: ContextStore
   ) => void;
-  /**
-   * editor height change listener
-   */
-  onHeightChange?: (
-    value?: CSSProperties["height"],
-    oldValue?: CSSProperties["height"],
-    state?: ContextStore
-  ) => void;
   /** Some data on the statistics editor. */
   onStatistics?: (data: Statistics) => void;
   /**
@@ -65,19 +57,6 @@ export interface MDEditorProps
    * or it has an `autofocus` attribute and no other element is focused.
    */
   autoFocus?: ITextAreaProps["autoFocus"];
-  /**
-   * The height of the editor.
-   * ⚠️ `Dragbar` is invalid when **`height`** parameter percentage.
-   */
-  height?: CSSProperties["height"];
-  /**
-   * Show drag and drop tool. Set the height of the editor.
-   */
-  visibleDragbar?: boolean;
-  /**
-   * @deprecated use `visibleDragbar`
-   */
-  visiableDragbar?: boolean;
   /**
    * Show markdown preview.
    */
@@ -90,14 +69,6 @@ export interface MDEditorProps
    * Disable `fullscreen` setting body styles
    */
   overflow?: boolean;
-  /**
-   * Maximum drag height. `visibleDragbar=true`
-   */
-  maxHeight?: number;
-  /**
-   * Minimum drag height. `visibleDragbar=true`
-   */
-  minHeight?: number;
   /**
    * This is reset [react-markdown](https://github.com/rexxars/react-markdown) settings.
    */
@@ -188,25 +159,18 @@ const InternalMDEditor = (
     commandsFilter,
     direction,
     extraCommands = getExtraCommands(),
-    height = 200,
     enableScroll = true,
-    visibleDragbar = typeof props.visiableDragbar === "boolean"
-      ? props.visiableDragbar
-      : true,
     highlightEnable = true,
     preview: previewType = "live",
     fullscreen = false,
     overflow = true,
     previewOptions = {},
     textareaProps,
-    maxHeight = 1200,
-    minHeight = 100,
     autoFocus,
     tabSize = 2,
     defaultTabEnable = false,
     onChange,
     onStatistics,
-    onHeightChange,
     hideToolbar,
     components,
     renderTextarea,
@@ -222,7 +186,6 @@ const InternalMDEditor = (
     markdown: propsValue,
     preview: previewType,
     components,
-    height,
     highlightEnable,
     tabSize,
     defaultTabEnable,
@@ -299,18 +262,7 @@ const InternalMDEditor = (
     [fullscreen]
   );
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  useMemo(
-    () => height !== state.height && dispatch({ height: height }),
-    [height]
-  );
-  useMemo(
-    () =>
-      height !== state.height &&
-      onHeightChange &&
-      onHeightChange(state.height, height, state),
-    [height, onHeightChange, state]
-  );
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+  // TODO remove commands and declare it here
   useMemo(
     () => commands !== state.commands && dispatch({ commands: cmds }),
     [props.commands]
@@ -402,7 +354,6 @@ const InternalMDEditor = (
     );
   }
 
-  const containerStyle = { ...other.style, height: state.height || "100%" };
   const containerClick = () =>
     dispatch({ barPopup: { ...setGroupPopFalse(state.barPopup) } });
 
@@ -427,13 +378,7 @@ const InternalMDEditor = (
   };
   return (
     <EditorContext.Provider value={{ ...state, dispatch }}>
-      <div
-        ref={container}
-        className={cls}
-        {...other}
-        onClick={containerClick}
-        style={containerStyle}
-      >
+      <div ref={container} className={cls} {...other} onClick={containerClick}>
         {!hideToolbar && <Toolbar />}
         <div className={`${prefixCls}-content`}>
           {/(edit|live)/.test(state.preview || "") && (

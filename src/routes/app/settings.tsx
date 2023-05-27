@@ -35,8 +35,8 @@ function Settings() {
   };
 
   return (
-    <>
-      <h1 className="text-center text-2xl font-semibold mt-3 dark:text-white">
+    <section className="w-full">
+      <h1 className="mt-3 text-center text-2xl font-semibold dark:text-white">
         Settings
       </h1>
 
@@ -65,6 +65,6 @@ function Settings() {
           ]}
         />
       </SettingsSection>
-    </>
+    </section>
   );
 }
