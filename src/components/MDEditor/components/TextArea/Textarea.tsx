@@ -1,13 +1,17 @@
 import React, { useContext, useEffect } from "react";
 import { IProps } from "../../Editor";
-import { EditorContext, ExecuteCommandState } from "../../Context";
+import { EditorContext } from "../../Context";
 import { TextAreaCommandOrchestrator } from "../../commands";
 import handleKeyDown from "./handleKeyDown";
 import shortcuts from "./shortcuts";
 import "./index.css";
 
+import TextareaAutosize, {
+  TextareaAutosizeProps,
+} from "react-textarea-autosize";
+
 export interface TextAreaProps
-  extends Omit<React.TextareaHTMLAttributes<HTMLTextAreaElement>, "value">,
+  extends Omit<TextareaAutosizeProps, "value">,
     IProps {}
 
 export default function Textarea(props: TextAreaProps) {
@@ -22,15 +26,9 @@ export default function Textarea(props: TextAreaProps) {
     tabSize,
     defaultTabEnable,
     dispatch,
-    // ...otherStore
   } = useContext(EditorContext);
   const textRef = React.useRef<HTMLTextAreaElement>(null);
   const executeRef = React.useRef<TextAreaCommandOrchestrator>();
-  const statesRef = React.useRef<ExecuteCommandState>({ fullscreen, preview });
-
-  useEffect(() => {
-    statesRef.current = { fullscreen, preview, highlightEnable };
-  }, [fullscreen, preview, highlightEnable]);
 
   useEffect(() => {
     if (textRef.current && dispatch) {
@@ -40,7 +38,6 @@ export default function Textarea(props: TextAreaProps) {
       executeRef.current = commandOrchestrator;
       dispatch({ textarea: textRef.current, commandOrchestrator });
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const onKeyDown = (
@@ -52,32 +49,12 @@ export default function Textarea(props: TextAreaProps) {
       [...(commands || []), ...(extraCommands || [])],
       executeRef.current,
       dispatch,
-      statesRef.current
+      { fullscreen, preview, highlightEnable }
     );
   };
-  useEffect(() => {
-    if (textRef.current) {
-      textRef.current.addEventListener("keydown", onKeyDown);
-    }
-    return () => {
-      if (textRef.current) {
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-        textRef.current.removeEventListener("keydown", onKeyDown);
-      }
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  useEffect(() => {
-    if (textRef.current) {
-      textRef.current.style.height = "inherit";
-      const scrollHeight = textRef.current.scrollHeight;
-      textRef.current.style.height = scrollHeight + "px";
-    }
-  }, [markdown]);
 
   return (
-    <textarea
+    <TextareaAutosize
       autoComplete="off"
       autoCorrect="off"
       autoCapitalize="off"
@@ -92,6 +69,7 @@ export default function Textarea(props: TextAreaProps) {
         dispatch && dispatch({ markdown: e.target.value });
         onChange && onChange(e);
       }}
+      onKeyDown={onKeyDown}
     />
   );
 }

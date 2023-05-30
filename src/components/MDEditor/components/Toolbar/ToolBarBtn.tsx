@@ -26,7 +26,10 @@ const ToolBarBtn = (props: ToolBarBtnProps) => {
         "grid h-6 w-6 place-items-center border-y border-gray-200 bg-white hover:bg-gray-100 disabled:opacity-40",
         className
       )}
-      onClick={() => onClick(command)}
+      onClick={(e) => {
+        e.preventDefault;
+        onClick(command);
+      }}
       {...others}
     >
       <Icon name={icon} size={16} />

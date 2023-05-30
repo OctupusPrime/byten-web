@@ -6,11 +6,6 @@ export const title1: ICommand = {
   keyCommand: "title1",
   shortcuts: "ctrlcmd+1",
   value: "title1",
-  buttonProps: {
-    "aria-label": "Insert title1 (ctrl + 1)",
-    title: "Insert title1 (ctrl + 1)",
-  },
-  icon: <div style={{ fontSize: 18, textAlign: "left" }}>Title 1</div>,
   execute: (state: TextState, api: TextAreaTextApi) => {
     if (state.selection.start === 0 || /\n$/.test(state.text)) {
       api.replaceSelection("# ");

@@ -27,6 +27,8 @@ import { title4 } from "./title4";
 import { title5 } from "./title5";
 import { title6 } from "./title6";
 
+import { ai } from "./ai";
+
 export interface CommandOrchestrator {
   executeCommand(command: ICommand): void;
 }
@@ -201,6 +203,7 @@ export {
   title4,
   title5,
   title6,
+  ai,
   bold,
   codeBlock,
   comment,

@@ -10,6 +10,8 @@ import { IProps } from "../../Editor";
 import { TextAreaCommandOrchestrator, ICommand } from "../../commands";
 import "./index.css";
 
+import type { TextareaAutosizeProps } from "react-textarea-autosize";
+
 type RenderTextareaHandle = {
   dispatch: ContextStore["dispatch"];
   onChange?: TextAreaProps["onChange"];
@@ -28,10 +30,7 @@ type RenderTextareaHandle = {
 };
 
 export interface ITextAreaProps
-  extends Omit<
-      React.TextareaHTMLAttributes<HTMLTextAreaElement>,
-      "value" | "onScroll"
-    >,
+  extends Omit<TextareaAutosizeProps, "value" | "onScroll">,
     IProps {
   value?: string;
   onScroll?: (e: React.UIEvent<HTMLDivElement>) => void;
@@ -52,8 +51,7 @@ export default function TextArea(props: ITextAreaProps) {
   const { prefixCls, className, onScroll, renderTextarea, ...otherProps } =
     props || {};
   const { scrollTop, dispatch } = useContext(EditorContext);
-  const textRef = React.useRef<HTMLTextAreaElement>(null);
-  const executeRef = React.useRef<TextAreaCommandOrchestrator>();
+
   const warp = React.createRef<HTMLDivElement>();
 
   useEffect(() => {
@@ -64,17 +62,6 @@ export default function TextArea(props: ITextAreaProps) {
     }
     if (dispatch) {
       dispatch({ ...state });
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  useEffect(() => {
-    if (textRef.current && dispatch) {
-      const commandOrchestrator = new TextAreaCommandOrchestrator(
-        textRef.current
-      );
-      executeRef.current = commandOrchestrator;
-      dispatch({ textarea: textRef.current, commandOrchestrator });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

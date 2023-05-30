@@ -2,7 +2,7 @@ import { useContext, useMemo } from "react";
 import { type ContextStore, EditorContext } from "../../Context";
 import * as commands from "../../commands";
 import ToolBarBtn from "./ToolBarBtn";
-import { Box, Center, SegmentedControl } from "@mantine/core";
+import { Box, Button, Center, SegmentedControl } from "@mantine/core";
 import Icon from "@components/Icon";
 
 const NewToolBar = () => {
@@ -39,6 +39,14 @@ const NewToolBar = () => {
     return preview === "preview" ? true : false;
   }, [preview]);
 
+  const handleAiCommand = () => {
+    const command = { ...commands.ai };
+
+    command.value = "val.replace(/({{text}})\n\n/gi, state1.selectedText)";
+
+    handleExecuteCommand(command);
+  };
+
   return (
     <div className="md-toolbar-wrapper sticky top-0 z-10 flex flex-wrap gap-4 border-b border-gray-200 bg-white px-3 py-2.5">
       <div className="flex items-center divide-x divide-gray-200 [&>:first-child]:rounded-l-sm [&>:first-child]:border-l [&>:last-child]:rounded-r-sm [&>:last-child]:!border-r">
@@ -70,6 +78,12 @@ const NewToolBar = () => {
         <ToolBarBtn
           icon="code"
           command={commands.code}
+          onClick={handleExecuteCommand}
+          disabled={isBtnDisabled}
+        />
+        <ToolBarBtn
+          icon="add_link"
+          command={commands.link}
           onClick={handleExecuteCommand}
           disabled={isBtnDisabled}
         />
@@ -122,14 +136,6 @@ const NewToolBar = () => {
       </div>
       <div className="flex items-center divide-x divide-gray-200 [&>:first-child]:rounded-l-sm [&>:first-child]:border-l [&>:last-child]:rounded-r-sm [&>:last-child]:!border-r">
         <ToolBarBtn
-          icon="add_link"
-          command={commands.link}
-          onClick={handleExecuteCommand}
-          disabled={isBtnDisabled}
-        />
-      </div>
-      <div className="flex items-center divide-x divide-gray-200 [&>:first-child]:rounded-l-sm [&>:first-child]:border-l [&>:last-child]:rounded-r-sm [&>:last-child]:!border-r">
-        <ToolBarBtn
           icon="list"
           command={commands.unorderedListCommand}
           onClick={handleExecuteCommand}
@@ -148,34 +154,42 @@ const NewToolBar = () => {
           disabled={isBtnDisabled}
         />
       </div>
-      <SegmentedControl
-        value={preview}
-        onChange={() => handleViewChange()}
-        data={[
-          {
-            value: "edit",
-            label: (
-              <Center>
-                <Icon name="edit_square" size={16} />
-                <Box mx={5}>Edit</Box>
-              </Center>
-            ),
-          },
-          {
-            value: "preview",
-            label: (
-              <Center>
-                <Icon name="preview" size={16} />
-                <Box mx={5}>Preview</Box>
-              </Center>
-            ),
-          },
-        ]}
-        classNames={{
-          root: "md:ml-auto md:mr-0 mx-auto",
-        }}
-        size="xs"
-      />
+      <div className="mx-auto inline-flex items-center gap-4 sm:ml-auto sm:mr-0">
+        <Button
+          variant="gradient"
+          gradient={{ from: "teal", to: "blue", deg: 60 }}
+          size="xs"
+          disabled={isBtnDisabled}
+          onClick={handleAiCommand}
+        >
+          Ai
+        </Button>
+        <SegmentedControl
+          value={preview}
+          onChange={() => handleViewChange()}
+          data={[
+            {
+              value: "edit",
+              label: (
+                <Center>
+                  <Icon name="edit_square" size={16} />
+                  <Box mx={5}>Edit</Box>
+                </Center>
+              ),
+            },
+            {
+              value: "preview",
+              label: (
+                <Center>
+                  <Icon name="preview" size={16} />
+                  <Box mx={5}>Preview</Box>
+                </Center>
+              ),
+            },
+          ]}
+          size="xs"
+        />
+      </div>
     </div>
   );
 };
