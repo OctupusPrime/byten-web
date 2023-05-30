@@ -60,6 +60,7 @@
 
 .w-md-editor-preview {
   width: 50%;
+  height: 100%;
   box-sizing: border-box;
   box-shadow: inset 1px 0 0 0 var(--md-editor-box-shadow-color);
   padding: 10px 20px;

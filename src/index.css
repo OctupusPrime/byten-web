@@ -73,7 +73,7 @@
     @apply h-full;
   }
 
-  .wmde-markdown {
+  body .wmde-markdown {
     color-scheme: light;
     --color-prettylights-syntax-comment: #6e7781;
     --color-prettylights-syntax-constant: #0550ae;
@@ -122,7 +122,7 @@
   .dark {
     @apply bg-neutral-900;
   }
-  .dark .wmde-markdown {
+  .dark body .wmde-markdown {
     color-scheme: dark;
     --color-prettylights-syntax-comment: #8b949e;
     --color-prettylights-syntax-constant: #79c0ff;

@@ -29,9 +29,12 @@ function App() {
   if (isLoading) return <></>;
 
   return (
-    <div className="h-full pl-0 md:pl-60">
+    <div
+      id="wrapper"
+      className="h-[calc(100%-80px)] overflow-auto md:h-full md:pl-60"
+    >
       <AppNavBar />
-      <main className="mx-auto flex min-h-full w-full max-w-3xl p-4 pb-24 md:pb-4">
+      <main className="mx-auto flex min-h-full w-full max-w-3xl p-4">
         <Outlet />
       </main>
     </div>

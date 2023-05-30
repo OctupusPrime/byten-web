@@ -1,10 +1,9 @@
-import React, { useEffect, Fragment, useContext } from "react";
+import React, { useEffect, useContext } from "react";
 import {
   EditorContext,
   ContextStore,
   ExecuteCommandState,
 } from "../../Context";
-import shortcuts from "./shortcuts";
 import Markdown from "./Markdown";
 import Textarea, { TextAreaProps } from "./Textarea";
 import { IProps } from "../../Editor";
@@ -52,14 +51,7 @@ export type TextAreaRef = {
 export default function TextArea(props: ITextAreaProps) {
   const { prefixCls, className, onScroll, renderTextarea, ...otherProps } =
     props || {};
-  const {
-    markdown,
-    scrollTop,
-    commands,
-    highlightEnable,
-    extraCommands,
-    dispatch,
-  } = useContext(EditorContext);
+  const { scrollTop, highlightEnable, dispatch } = useContext(EditorContext);
   const textRef = React.useRef<HTMLTextAreaElement>(null);
   const executeRef = React.useRef<TextAreaCommandOrchestrator>();
   const warp = React.createRef<HTMLDivElement>();
@@ -97,43 +89,8 @@ export default function TextArea(props: ITextAreaProps) {
       onScroll={onScroll}
     >
       <div className={`${prefixCls}-text`}>
-        {renderTextarea ? (
-          React.cloneElement(
-            renderTextarea(
-              {
-                ...otherProps,
-                value: markdown,
-                autoComplete: "off",
-                autoCorrect: "off",
-                spellCheck: "false",
-                autoCapitalize: "off",
-                className: `${prefixCls}-text-input`,
-                style: {
-                  WebkitTextFillColor: "inherit",
-                  overflow: "auto",
-                },
-              },
-              {
-                dispatch,
-                onChange: otherProps.onChange,
-                shortcuts,
-                useContext: {
-                  commands,
-                  extraCommands,
-                  commandOrchestrator: executeRef.current,
-                },
-              }
-            ),
-            {
-              ref: textRef,
-            }
-          )
-        ) : (
-          <Fragment>
-            {highlightEnable && <Markdown prefixCls={prefixCls} />}
-            <Textarea prefixCls={prefixCls} {...otherProps} style={textStyle} />
-          </Fragment>
-        )}
+        {highlightEnable && <Markdown prefixCls={prefixCls} />}
+        <Textarea prefixCls={prefixCls} {...otherProps} style={textStyle} />
       </div>
     </div>
   );

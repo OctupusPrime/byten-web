@@ -68,6 +68,14 @@ export default function Textarea(props: TextAreaProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  useEffect(() => {
+    if (textRef.current) {
+      textRef.current.style.height = "inherit";
+      const scrollHeight = textRef.current.scrollHeight;
+      textRef.current.style.height = scrollHeight + "px";
+    }
+  }, [markdown]);
+
   return (
     <textarea
       autoComplete="off"
