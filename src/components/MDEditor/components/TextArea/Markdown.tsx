@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useMemo } from "react";
+import React, { useContext, useMemo } from "react";
 
 import { IProps } from "../../Editor";
 import { EditorContext } from "../../Context";
@@ -31,11 +31,7 @@ export interface MarkdownProps
 
 export default function Markdown(props: MarkdownProps) {
   const { prefixCls } = props;
-  const {
-    markdown = "",
-    highlightEnable,
-    dispatch,
-  } = useContext(EditorContext);
+  const { markdown = "", highlightEnable } = useContext(EditorContext);
 
   // const preRef = React.createRef<HTMLPreElement>();
 
@@ -74,7 +70,7 @@ export default function Markdown(props: MarkdownProps) {
   const virtualizer = useVirtualizer({
     count: mdCodeBlocks.length,
     getScrollElement: () => document.getElementById("wrapper"),
-    estimateSize: () => 30,
+    estimateSize: () => 18,
   });
 
   return (
@@ -82,7 +78,7 @@ export default function Markdown(props: MarkdownProps) {
       <pre
         className={`language-markdown w-md-editor-text-pre wmde-markdown-color language-markdown`}
       >
-        <code
+        {/* <code
           className="language-markdown code-highlight"
           style={{
             height: virtualizer.getTotalSize(),
@@ -100,16 +96,16 @@ export default function Markdown(props: MarkdownProps) {
                 ref={virtualizer.measureElement}
                 style={{
                   transform: `translateY(${virtualRow.start}px)`,
-                  lineHeight: "17.9px",
+                  lineHeight: "18px",
                 }}
-                className="code-line absolute left-0 top-0 bg-red-500"
+                className="code-line absolute left-0 top-0"
                 dangerouslySetInnerHTML={{ __html: line }}
               />
             );
           })}
-        </code>
+        </code> */}
 
-        {/* <code
+        <code
           className="language-markdown code-highlight"
           style={{
             height: virtualizer.getTotalSize(),
@@ -120,10 +116,10 @@ export default function Markdown(props: MarkdownProps) {
             <span
               key={index}
               dangerouslySetInnerHTML={{ __html: line }}
-              className="code-line bg-red-500"
+              className="code-line"
             />
           ))}
-        </code> */}
+        </code>
       </pre>
     </div>
   );
