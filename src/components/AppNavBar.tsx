@@ -77,7 +77,7 @@ const AppNavBar = () => {
               <LinkBtn
                 title={t("navbar.links.ai")}
                 to="/app/ai"
-                icon="robot"
+                icon="magic_button"
                 exact={false}
               />
             </li>
@@ -114,7 +114,7 @@ const AppNavBar = () => {
               <MobalLinkBtn
                 title={t("navbar.links.ai")}
                 to="/app/ai"
-                icon="robot"
+                icon="magic_button"
                 exact={false}
               />
             </li>

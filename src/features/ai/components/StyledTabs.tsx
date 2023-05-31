@@ -1,10 +1,10 @@
-import { type TabsProps, Tabs as MTabs } from "@mantine/core";
+import { type TabsProps, Tabs } from "@mantine/core";
 
-const Tabs = (props: TabsProps) => {
+const StyledTabs = (props: TabsProps) => {
   const { styles, ...other } = props;
 
   return (
-    <MTabs
+    <Tabs
       unstyled
       {...other}
       styles={(theme) => ({
@@ -21,11 +21,9 @@ const Tabs = (props: TabsProps) => {
               ? theme.colors.dark[6]
               : theme.colors.gray[4]
           }`,
-          padding: `8px ${theme.spacing.md}`,
+          padding: `8px 16px`,
           cursor: "pointer",
           fontSize: theme.fontSizes.sm,
-          display: "flex",
-          alignItems: "center",
           fontWeight: 500,
 
           "&:disabled": {
@@ -63,4 +61,4 @@ const Tabs = (props: TabsProps) => {
   );
 };
 
-export default Tabs;
+export default StyledTabs;

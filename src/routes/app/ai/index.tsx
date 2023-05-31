@@ -1,7 +1,13 @@
 import { Route, useNavigate, Outlet, useMatches } from "@tanstack/router";
 import { appRoute } from "../";
-import { StyledTabs } from "@features/ai";
-import { Tabs } from "@mantine/core";
+import {
+  AiItemCreateOrEditModal,
+  AiItemDeleteModal,
+  StyledTabs,
+  useCreateOrEditAiItemModalStore,
+  useDeleteAiItemModalStore,
+} from "@features/ai";
+import { Button, Tabs } from "@mantine/core";
 import { useEffect, useState } from "react";
 
 export const appAiRoute = new Route({
@@ -27,6 +33,17 @@ function Ai() {
     });
   };
 
+  const openCreateAiItemModal = useCreateOrEditAiItemModalStore(
+    (state) => state.openModal
+  );
+
+  const handleCreateClick = () => {
+    return openCreateAiItemModal(
+      undefined,
+      tabState === "/app/ai/prompts" ? "promt" : "modify"
+    );
+  };
+
   return (
     <section className="w-full">
       <h1 className="my-2 text-center text-2xl font-semibold dark:text-white">
@@ -47,6 +64,54 @@ function Ai() {
         </Tabs.List>
       </StyledTabs>
       <Outlet />
+      <div className="sticky bottom-0 mt-3 bg-gradient-to-t from-white to-transparent text-center dark:from-neutral-900">
+        <Button
+          classNames={{
+            root: "!my-2",
+          }}
+          variant="gradient"
+          gradient={{ from: "teal", to: "blue", deg: 60 }}
+          onClick={handleCreateClick}
+        >
+          Create new
+        </Button>
+      </div>
+      <AiPageModals />
     </section>
+  );
+}
+
+function AiPageModals() {
+  const { deleteState, isVisibleDelete, closeDeleteModal } =
+    useDeleteAiItemModalStore((state) => ({
+      deleteState: state.state,
+      isVisibleDelete: state.isVisible,
+      closeDeleteModal: state.closeModal,
+    }));
+
+  const { editState, createType, isVisibleEdit, isEditModal, closeEditModal } =
+    useCreateOrEditAiItemModalStore((state) => ({
+      editState: state.state,
+      isVisibleEdit: state.isVisible,
+      closeEditModal: state.closeModal,
+      isEditModal: state.isEdit,
+      createType: state.createType,
+    }));
+
+  return (
+    <>
+      <AiItemDeleteModal
+        state={deleteState}
+        opened={isVisibleDelete}
+        onClose={closeDeleteModal}
+      />
+      <AiItemCreateOrEditModal
+        state={editState}
+        opened={isVisibleEdit}
+        isEdit={isEditModal}
+        onClose={closeEditModal}
+        createType={createType}
+      />
+    </>
   );
 }
