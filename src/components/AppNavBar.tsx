@@ -8,16 +8,17 @@ interface LinkBtnProps {
   icon?: IconsName;
   title: string;
   to: string;
+  exact?: boolean;
 }
 
 const LinkBtn = (props: LinkBtnProps) => {
-  const { title, icon, to } = props;
+  const { title, icon, to, exact = true } = props;
 
   return (
     <Link
       to={to as any}
       activeOptions={{
-        exact: true,
+        exact,
       }}
       className={"nav-link"}
       activeProps={{
@@ -31,13 +32,13 @@ const LinkBtn = (props: LinkBtnProps) => {
 };
 
 const MobalLinkBtn = (props: LinkBtnProps) => {
-  const { title, icon, to } = props;
+  const { title, icon, to, exact = true } = props;
 
   return (
     <Link
       to={to as any}
       activeOptions={{
-        exact: true,
+        exact,
       }}
       className={"mobal-nav-link"}
       activeProps={{
@@ -73,7 +74,12 @@ const AppNavBar = () => {
               />
             </li>
             <li>
-              <LinkBtn title={t("navbar.links.ai")} to="/app/ai" icon="robot" />
+              <LinkBtn
+                title={t("navbar.links.ai")}
+                to="/app/ai"
+                icon="robot"
+                exact={false}
+              />
             </li>
             <li>
               <LinkBtn
@@ -109,6 +115,7 @@ const AppNavBar = () => {
                 title={t("navbar.links.ai")}
                 to="/app/ai"
                 icon="robot"
+                exact={false}
               />
             </li>
             <li>

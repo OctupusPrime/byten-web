@@ -2,21 +2,26 @@ import { Router } from "@tanstack/router";
 import { QueryClient } from "@tanstack/react-query";
 
 //routes
-import { rootRoute } from "./routes/root";
 import { indexRoute } from "./routes";
+import { rootRoute } from "./routes/root";
 import { loginRoute } from "./routes/login";
 import { appRoute } from "./routes/app";
-import { appSettingsRoute } from "./routes/app/settings";
-import { appAiRoute } from "./routes/app/ai";
+//dashboard
 import { appDashboardRoute } from "./routes/app/dashboard";
 import { appTodayRoute } from "./routes/app/today";
+//ai
+import { appAiRoute } from "./routes/app/ai";
+import { appAiTextModifyRoute } from "./routes/app/ai/textModify";
+import { appAiPromtsRoute } from "./routes/app/ai/aiPromts";
+//settings
+import { appSettingsRoute } from "./routes/app/settings";
 
 export const routeTree = rootRoute.addChildren([
   indexRoute,
   loginRoute,
   appRoute.addChildren([
     appDashboardRoute,
-    appAiRoute,
+    appAiRoute.addChildren([appAiTextModifyRoute, appAiPromtsRoute]),
     appSettingsRoute,
     appTodayRoute,
   ]),
