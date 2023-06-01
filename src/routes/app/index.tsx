@@ -8,9 +8,6 @@ export const appRoute = new Route({
   getParentRoute: () => rootRoute,
   path: "/app",
   component: App,
-  // loader: ({ context }) => {
-  //   console.log("queryContext", context.queryClient);
-  // },
 });
 
 function App() {
@@ -25,8 +22,6 @@ function App() {
         to: "/login",
       });
   }, [session, isLoading]);
-
-  if (isLoading) return <></>;
 
   return (
     <div

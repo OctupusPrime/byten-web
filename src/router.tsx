@@ -12,7 +12,7 @@ import { appTodayRoute } from "./routes/app/today";
 //ai
 import { appAiRoute } from "./routes/app/ai";
 import { appAiTextModifyRoute } from "./routes/app/ai/textModify";
-import { appAiPromtsRoute } from "./routes/app/ai/aiPromts";
+import { appAiPromptsRoute } from "./routes/app/ai/aiPrompts";
 //settings
 import { appSettingsRoute } from "./routes/app/settings";
 
@@ -21,7 +21,7 @@ export const routeTree = rootRoute.addChildren([
   loginRoute,
   appRoute.addChildren([
     appDashboardRoute,
-    appAiRoute.addChildren([appAiTextModifyRoute, appAiPromtsRoute]),
+    appAiRoute.addChildren([appAiTextModifyRoute, appAiPromptsRoute]),
     appSettingsRoute,
     appTodayRoute,
   ]),
@@ -34,9 +34,11 @@ export type RouterContext = {
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
+      refetchOnWindowFocus: false,
+
       cacheTime: 1000 * 60 * 60 * 24, // 24 hours
-      staleTime: 2000,
-      retry: 0,
+      staleTime: 1000 * 60 * 60, // 1 hour
+      retry: false,
     },
   },
 });
@@ -46,7 +48,6 @@ const router = new Router({
   context: {
     queryClient,
   },
-  // defaultPreload: "intent", Allout of unsesary rerender turn on back if fixed
 });
 
 export { queryClient, router };

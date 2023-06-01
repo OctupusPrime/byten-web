@@ -11,6 +11,7 @@ import QueryContextProvider from "@context/QueryContext.tsx";
 import App from "./App.tsx";
 
 //TODO update route package if they fix https://github.com/TanStack/router/issues/597
+//TODO check spelling of promts or prompts
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>

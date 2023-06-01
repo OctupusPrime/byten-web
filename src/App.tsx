@@ -14,10 +14,13 @@ import {
 
 import { getThemeValue } from "@utils/theme.ts";
 import { useTranslation } from "react-i18next";
+import { useAuthContext } from "@context/AuthContext.tsx";
+import { Notifications } from "@mantine/notifications";
 
 const myCache = createEmotionCache({ key: "mantine" });
 
 const App = () => {
+  const { isLoading } = useAuthContext();
   const { i18n } = useTranslation();
 
   const theme = useThemeStore((state) => state.state);
@@ -35,7 +38,8 @@ const App = () => {
       }}
       emotionCache={myCache}
     >
-      <RouterProvider router={router} />
+      {isLoading ? <></> : <RouterProvider router={router} />}
+      <Notifications />
     </MantineProvider>
   );
 };

@@ -1,23 +1,22 @@
 import { Route } from "@tanstack/router";
 import { appAiRoute } from ".";
+import useGetAiPrompts from "@hooks/query/ai/useGetAiPrompts";
 import {
   AiListItem,
   AiListItemLoader,
   useCreateOrEditAiItemModalStore,
   useDeleteAiItemModalStore,
 } from "@features/ai";
-import useGetModifyPrompts from "@hooks/query/ai/useGetModifyPrompts";
-
 import type { aiItem } from "types/data/ai";
 
-export const appAiTextModifyRoute = new Route({
+export const appAiPromptsRoute = new Route({
   getParentRoute: () => appAiRoute,
-  path: "/",
-  component: TextModify,
+  path: "/prompts",
+  component: AiPromts,
 });
 
-function TextModify() {
-  const { data, isSuccess } = useGetModifyPrompts();
+function AiPromts() {
+  const { data, isSuccess } = useGetAiPrompts({});
 
   const openDeleleConformation = useDeleteAiItemModalStore(
     (state) => state.openModal

@@ -1,6 +1,8 @@
 import DeleteConformationModal, {
   type DeleteConformationModalProps,
 } from "@components/Modals/DeleteConformationModal";
+import useDeletePrompt from "@hooks/query/ai/useDeletePrompt";
+import { notifications } from "@mantine/notifications";
 import type { aiItem } from "types/data/ai";
 
 export interface AiItemDeleteModalProps
@@ -14,12 +16,23 @@ export interface AiItemDeleteModalProps
 const AiItemDeleteModal = (props: AiItemDeleteModalProps) => {
   const { state, onClose, ...others } = props;
 
+  const { mutate, isLoading } = useDeletePrompt();
+
   const handleSubmit = () => {
     if (!state) return onClose();
 
-    console.log("delete-ai-state", state);
-
-    onClose();
+    mutate(state, {
+      onSuccess: () => {
+        onClose();
+      },
+      onError: () => {
+        notifications.show({
+          title: "Cannot delete prompt",
+          message: "Try again later",
+          color: "red",
+        });
+      },
+    });
   };
 
   return (
@@ -27,7 +40,7 @@ const AiItemDeleteModal = (props: AiItemDeleteModalProps) => {
       {...others}
       onClose={onClose}
       onSubmit={handleSubmit}
-      isSubmitLoading={false}
+      isSubmitLoading={isLoading}
       title="AI Prompt Deletion Confirmation"
       description="Deleting this AI prompt will permanently remove it from your collection. "
     />

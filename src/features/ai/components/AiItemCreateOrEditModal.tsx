@@ -12,6 +12,9 @@ import { z } from "zod";
 import { type SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect } from "react";
+import { notifications } from "@mantine/notifications";
+import useCreatePrompt from "@hooks/query/ai/useCreatePrompt";
+import useUpdatePrompt from "@hooks/query/ai/useUpdatePrompt";
 
 const FormSchema = z.object({
   title: z.string().min(3).max(50),
@@ -30,7 +33,7 @@ export interface AiItemCreateOrEditModalProps
 const AiItemCreateOrEditModal = (props: AiItemCreateOrEditModalProps) => {
   const { state, createType, isEdit, onClose, opened, ...others } = props;
 
-  const itemType = isEdit ? state?.type : createType ?? "promt";
+  const itemType = isEdit ? state?.type : createType ?? "prompt";
 
   const {
     register,
@@ -44,11 +47,59 @@ const AiItemCreateOrEditModal = (props: AiItemCreateOrEditModalProps) => {
   useEffect(() => {
     if (!opened) return;
 
-    reset(state);
+    reset({
+      title: state?.title ?? "",
+      command: state?.command ?? "",
+    });
   }, [opened]);
 
+  const { mutate: createMutate, isLoading: loadingMutate } = useCreatePrompt();
+
+  const { mutate: updateMutate } = useUpdatePrompt();
+
   const submit: SubmitHandler<FormSchemaType> = (formVal) => {
-    console.log("submit", formVal);
+    if (!itemType) return onClose();
+
+    if (isEdit) {
+      if (!state) return onClose();
+
+      updateMutate(
+        {
+          ...formVal,
+          type: state.type,
+          id: state.id,
+        },
+        {
+          onError: () => {
+            notifications.show({
+              title: "Cannot update prompt",
+              message: "Try again later",
+              color: "red",
+            });
+          },
+        }
+      );
+      onClose();
+    } else {
+      createMutate(
+        {
+          ...formVal,
+          type: itemType,
+        },
+        {
+          onSuccess: () => {
+            onClose();
+          },
+          onError: () => {
+            notifications.show({
+              title: "Cannot create prompt",
+              message: "Try again later",
+              color: "red",
+            });
+          },
+        }
+      );
+    }
   };
 
   return (
@@ -56,7 +107,7 @@ const AiItemCreateOrEditModal = (props: AiItemCreateOrEditModalProps) => {
       {...others}
       opened={opened}
       onClose={onClose}
-      title={isEdit ? "Edit promt" : "Create promt"}
+      title={isEdit ? "Edit prompt" : "Create prompt"}
     >
       <form onSubmit={handleSubmit(submit)}>
         <TextInput
@@ -83,13 +134,15 @@ const AiItemCreateOrEditModal = (props: AiItemCreateOrEditModalProps) => {
           }}
           label="Type"
           disabled
-          value={itemType}
+          value={itemType ?? ""}
         />
         <div className="mt-3 flex items-center justify-between">
           <Button type="button" variant="subtle" color="red" onClick={onClose}>
             Cancel
           </Button>
-          <Button type="submit">{isEdit ? "Update" : "Create"}</Button>
+          <Button type="submit" loading={loadingMutate}>
+            {isEdit ? "Update" : "Create"}
+          </Button>
         </div>
       </form>
     </Modal>

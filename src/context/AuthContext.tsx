@@ -43,6 +43,7 @@ export const AuthContextProvider = ({ children }: AuthContextProps) => {
 
     const unsubscribe = onAuthStateChanged(auth, (currentSession) => {
       setIsLoading(false);
+      console.log(currentSession);
       setSession(currentSession);
     });
 

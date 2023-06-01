@@ -2,20 +2,23 @@ import axiosInstance from "@lib/axios";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import type { aiItem } from "types/data/ai";
 
-const reqUpdatePromt = async (item: aiItem) => {
-  const { data } = await axiosInstance.get<aiItem>("test");
+const reqUpdatePrompt = async (item: aiItem) => {
+  const { data } = await axiosInstance.put<aiItem>(
+    `ai-prompts/${item.id}`,
+    item
+  );
 
   return data;
 };
 
-export default function useUpdatePromt() {
+export default function useUpdatePrompt() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: reqUpdatePromt,
+    mutationFn: reqUpdatePrompt,
     onMutate: async (item) => {
       const queryKey =
-        item.type === "modify" ? ["ai", "text-modify"] : ["ai", "promts"];
+        item.type === "modify" ? ["ai", "text-modify"] : ["ai", "prompt"];
 
       await queryClient.cancelQueries({ queryKey });
 

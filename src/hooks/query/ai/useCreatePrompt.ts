@@ -2,20 +2,20 @@ import axiosInstance from "@lib/axios";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import type { aiItem } from "types/data/ai";
 
-const reqDeletePromt = async (item: aiItem) => {
-  const { data } = await axiosInstance.get<aiItem>("test");
+const reqDeletePrompt = async (item: Omit<aiItem, "id">) => {
+  const { data } = await axiosInstance.post<aiItem>("ai-prompts/create", item);
 
   return data;
 };
 
-export default function useDeletePromt() {
+export default function useCreatePrompt() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: reqDeletePromt,
+    mutationFn: reqDeletePrompt,
     onMutate: async (item) => {
       const queryKey =
-        item.type === "modify" ? ["ai", "text-modify"] : ["ai", "promts"];
+        item.type === "modify" ? ["ai", "text-modify"] : ["ai", "prompt"];
 
       return { queryKey };
     },
