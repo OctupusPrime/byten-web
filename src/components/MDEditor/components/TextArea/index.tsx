@@ -8,7 +8,6 @@ import {
 import Textarea, { TextAreaProps } from "./Textarea";
 import { IProps } from "../../Editor";
 import { TextAreaCommandOrchestrator, ICommand } from "../../commands";
-import "./index.css";
 
 import type { TextareaAutosizeProps } from "react-textarea-autosize";
 

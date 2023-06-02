@@ -1,20 +1,15 @@
 import React from "react";
 import { ICommand, TextAreaCommandOrchestrator } from "./commands";
-import { MDEditorProps } from "./Editor";
 
 export type PreviewType = "live" | "edit" | "preview";
 
 export interface ContextStore {
-  components?: MDEditorProps["components"];
   commands?: ICommand<string>[];
   extraCommands?: ICommand<string>[];
   markdown?: string;
   preview?: PreviewType;
   height?: React.CSSProperties["height"];
-  fullscreen?: boolean;
-  highlightEnable?: boolean;
   autoFocus?: boolean;
-  textarea?: HTMLTextAreaElement;
   commandOrchestrator?: TextAreaCommandOrchestrator;
   textareaWarp?: HTMLDivElement;
   textareaPre?: HTMLPreElement;

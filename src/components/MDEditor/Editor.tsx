@@ -15,12 +15,10 @@ import Toolbar from "./components/Toolbar";
 import {
   getCommands,
   getExtraCommands,
-  ICommand,
   TextState,
   TextAreaCommandOrchestrator,
 } from "./commands";
 import { reducer, EditorContext, ContextStore, PreviewType } from "./Context";
-import "./index.css";
 
 export interface IProps {
   prefixCls?: string;
@@ -77,31 +75,8 @@ export interface MDEditorProps
    * Set the `textarea` related props.
    */
   textareaProps?: ITextAreaProps;
-  /**
-   * Use div to replace TextArea or re-render TextArea
-   * @deprecated Please use ~~`renderTextarea`~~ -> `components`
-   */
-  renderTextarea?: ITextAreaProps["renderTextarea"];
-  /**
-   * re-render element
-   */
-  components?: {
-    /** Use div to replace TextArea or re-render TextArea */
-    textarea?: ITextAreaProps["renderTextarea"];
-    /** Custom markdown preview */
-    preview?: (
-      source: string,
-      state: ContextStore,
-      dispath: React.Dispatch<ContextStore>
-    ) => JSX.Element;
-  };
-  /** Theme configuration */
-  "data-color-mode"?: "light" | "dark";
-  /**
-   * Disable editing area code highlighting. The value is `false`, which increases the editing speed.
-   * @default true
-   */
-  highlightEnable?: boolean;
+
+  toolbarClassName?: string;
   /**
    * The number of characters to insert when pressing tab key.
    * Default `2` spaces.
@@ -112,24 +87,9 @@ export interface MDEditorProps
    */
   defaultTabEnable?: boolean;
   /**
-   * You can create your own commands or reuse existing commands.
-   */
-  commands?: ICommand[];
-  /**
-   * Filter or modify your commands.
-   * https://github.com/uiwjs/react-md-editor/issues/296
-   */
-  commandsFilter?: (command: ICommand, isExtra: boolean) => false | ICommand;
-  /**
-   * You can create your own commands or reuse existing commands.
-   */
-  extraCommands?: ICommand[];
-  /**
    * Hide the tool bar
    */
   hideToolbar?: boolean;
-  /** Whether to enable scrolling */
-  enableScroll?: boolean;
   /**
    * The **`direction`** property sets the direction of text, table columns, and horizontal overflow. Use `rtl` for languages written from right to left (like Hebrew or Arabic), and `ltr` for those written from left to right (like English and most other languages).
    *
@@ -155,38 +115,28 @@ const InternalMDEditor = (
     prefixCls = "w-md-editor",
     className,
     value: propsValue,
-    commands = getCommands(),
-    commandsFilter,
     direction,
-    extraCommands = getExtraCommands(),
-    enableScroll = true,
-    highlightEnable = true,
     preview: previewType = "live",
     fullscreen = false,
     overflow = true,
     previewOptions = {},
     textareaProps,
+    toolbarClassName = "",
     autoFocus,
     tabSize = 2,
     defaultTabEnable = false,
     onChange,
     onStatistics,
     hideToolbar,
-    components,
-    renderTextarea,
     ...other
   } = props || {};
-  const cmds = commands
-    .map((item) => (commandsFilter ? commandsFilter(item, false) : item))
-    .filter(Boolean) as ICommand[];
-  const extraCmds = extraCommands
-    .map((item) => (commandsFilter ? commandsFilter(item, true) : item))
-    .filter(Boolean) as ICommand[];
+
+  const cmds = getCommands();
+  const extraCmds = getExtraCommands();
+
   const [state, dispatch] = useReducer(reducer, {
     markdown: propsValue,
     preview: previewType,
-    components,
-    highlightEnable,
     tabSize,
     defaultTabEnable,
     scrollTop: 0,
@@ -198,14 +148,12 @@ const InternalMDEditor = (
   });
   const container = useRef<HTMLDivElement>(null);
   const previewRef = useRef<HTMLDivElement>(null);
-  const enableScrollRef = useRef(enableScroll);
 
   useImperativeHandle(ref, () => ({
     ...state,
     container: container.current,
     dispatch,
   }));
-  useMemo(() => (enableScrollRef.current = enableScroll), [enableScroll]);
   useEffect(() => {
     const stateInit: ContextStore = {};
     if (container.current) {
@@ -216,7 +164,6 @@ const InternalMDEditor = (
     if (dispatch) {
       dispatch({ ...state, ...stateInit });
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const cls = [
@@ -236,21 +183,14 @@ const InternalMDEditor = (
       propsValue !== state.markdown && dispatch({ markdown: propsValue || "" }),
     [propsValue, state.markdown]
   );
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+
   useMemo(
     () => previewType !== state.preview && dispatch({ preview: previewType }),
     [previewType]
   );
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+
   useMemo(() => tabSize !== state.tabSize && dispatch({ tabSize }), [tabSize]);
-  useMemo(
-    () =>
-      highlightEnable !== state.highlightEnable &&
-      dispatch({ highlightEnable }),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [highlightEnable]
-  );
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+
   useMemo(
     () => autoFocus !== state.autoFocus && dispatch({ autoFocus: autoFocus }),
     [autoFocus]
@@ -258,21 +198,8 @@ const InternalMDEditor = (
   useMemo(
     () =>
       fullscreen !== state.fullscreen && dispatch({ fullscreen: fullscreen }),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+
     [fullscreen]
-  );
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  // TODO remove commands and declare it here
-  useMemo(
-    () => commands !== state.commands && dispatch({ commands: cmds }),
-    [props.commands]
-  );
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  useMemo(
-    () =>
-      extraCommands !== state.extraCommands &&
-      dispatch({ extraCommands: extraCmds }),
-    [props.extraCommands]
   );
 
   const textareaDomRef = useRef<HTMLDivElement>();
@@ -281,21 +208,34 @@ const InternalMDEditor = (
 
   useMemo(() => {
     textareaDomRef.current = state.textareaWarp;
+    const mouseOverListener = () => {
+      active.current = "text";
+    };
+
+    const mouseLeaveListener = () => {
+      active.current = "preview";
+    };
+
     if (state.textareaWarp) {
-      state.textareaWarp.addEventListener("mouseover", () => {
-        active.current = "text";
-      });
-      state.textareaWarp.addEventListener("mouseleave", () => {
-        active.current = "preview";
-      });
+      state.textareaWarp.addEventListener("mouseover", mouseOverListener);
+      state.textareaWarp.addEventListener("mouseleave", mouseLeaveListener);
     }
+
+    return () => {
+      if (state.textareaWarp) {
+        state.textareaWarp.removeEventListener("mouseover", mouseLeaveListener);
+        state.textareaWarp.removeEventListener(
+          "moyseleave",
+          mouseLeaveListener
+        );
+      }
+    };
   }, [state.textareaWarp]);
 
   const handleScroll = (
     e: React.UIEvent<HTMLDivElement>,
     type: "text" | "preview"
   ) => {
-    if (!enableScrollRef.current) return;
     const textareaDom = textareaDomRef.current;
     const previewDom = previewRef.current ? previewRef.current : undefined;
     if (!initScroll.current) {
@@ -325,34 +265,9 @@ const InternalMDEditor = (
   const previewClassName = `${prefixCls}-preview ${
     previewOptions.className || ""
   }`;
+
   const handlePreviewScroll = (e: React.UIEvent<HTMLDivElement, UIEvent>) =>
     handleScroll(e, "preview");
-  let mdPreview = useMemo(
-    () => (
-      <div ref={previewRef} className={previewClassName}>
-        <MarkdownPreview
-          {...previewOptions}
-          onScroll={handlePreviewScroll}
-          source={state.markdown || ""}
-        />
-      </div>
-    ),
-    [previewClassName, previewOptions, state.markdown]
-  );
-  const preview =
-    components?.preview &&
-    components?.preview(state.markdown || "", state, dispatch);
-  if (preview && React.isValidElement(preview)) {
-    mdPreview = (
-      <div
-        className={previewClassName}
-        ref={previewRef}
-        onScroll={handlePreviewScroll}
-      >
-        {preview}
-      </div>
-    );
-  }
 
   const containerClick = () =>
     dispatch({ barPopup: { ...setGroupPopFalse(state.barPopup) } });
@@ -376,10 +291,11 @@ const InternalMDEditor = (
       });
     }
   };
+
   return (
     <EditorContext.Provider value={{ ...state, dispatch }}>
       <div ref={container} className={cls} {...other} onClick={containerClick}>
-        {!hideToolbar && <Toolbar />}
+        {!hideToolbar && <Toolbar className={toolbarClassName} />}
         <div className={`${prefixCls}-content`}>
           {/(edit|live)/.test(state.preview || "") && (
             <TextArea
@@ -388,11 +304,18 @@ const InternalMDEditor = (
               autoFocus={autoFocus}
               {...textareaProps}
               onChange={changeHandle}
-              renderTextarea={components?.textarea || renderTextarea}
               onScroll={(e) => handleScroll(e, "text")}
             />
           )}
-          {/(live|preview)/.test(state.preview || "") && mdPreview}
+          {/(live|preview)/.test(state.preview || "") && (
+            <div ref={previewRef} className={previewClassName}>
+              <MarkdownPreview
+                {...previewOptions}
+                onScroll={handlePreviewScroll}
+                source={state.markdown || ""}
+              />
+            </div>
+          )}
         </div>
       </div>
     </EditorContext.Provider>

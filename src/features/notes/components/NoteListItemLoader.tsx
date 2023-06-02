@@ -13,7 +13,7 @@ const NoteListItemLoader = ({ items }: NoteListItemLoaderProps) => {
         ))}
       </div>
 
-      <Skeleton className="!ml-auto" width={"85px"} height={12} mt={18} />
+      <Skeleton className="!ml-auto" width={85} height={12} mt={18} />
     </div>
   );
 };

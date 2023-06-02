@@ -7,7 +7,9 @@ import { loginRoute } from "./routes/login";
 import { appRoute } from "./routes/app";
 //dashboard
 import { appDashboardRoute } from "./routes/app/dashboard";
+//note
 import { appNoteRoute } from "./routes/app/note";
+import { appEditNoteRoute } from "./routes/app/note/edit";
 //ai
 import { appAiRoute } from "./routes/app/ai";
 import { appAiTextModifyRoute } from "./routes/app/ai/textModify";
@@ -23,6 +25,7 @@ export const routeTree = rootRoute.addChildren([
     appAiRoute.addChildren([appAiTextModifyRoute, appAiPromptsRoute]),
     appSettingsRoute,
     appNoteRoute,
+    appEditNoteRoute,
   ]),
 ]);
 

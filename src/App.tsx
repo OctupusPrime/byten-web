@@ -1,5 +1,4 @@
 import { useEffect } from "react";
-import "./index.css";
 import "@lib/i18.ts";
 
 import { MantineProvider, createEmotionCache } from "@mantine/core";

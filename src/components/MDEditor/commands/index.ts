@@ -26,7 +26,6 @@ import { title3 } from "./title3";
 import { title4 } from "./title4";
 import { title5 } from "./title5";
 import { title6 } from "./title6";
-
 import { ai } from "./ai";
 
 export interface CommandOrchestrator {
@@ -95,11 +94,13 @@ const getCommands: () => ICommand[] = () => [
   italic,
   strikethrough,
   hr,
-  group([title1, title2, title3, title4, title5, title6], {
-    name: "title",
-    groupName: "title",
-    buttonProps: { "aria-label": "Insert title", title: "Insert title" },
-  }),
+  title1,
+  title2,
+  title3,
+  title4,
+  title5,
+  title6,
+  ai,
   divider,
   link,
   quote,

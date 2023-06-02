@@ -6,8 +6,9 @@ import { Box, Button, Center, Modal, SegmentedControl } from "@mantine/core";
 import Icon from "@components/Icon";
 
 import { useDisclosure } from "@mantine/hooks";
+import { twMerge } from "tailwind-merge";
 
-const NewToolBar = () => {
+const NewToolBar = (props?: { className?: string }) => {
   const {
     commandOrchestrator,
     preview,
@@ -53,7 +54,12 @@ const NewToolBar = () => {
 
   return (
     <>
-      <div className="md-toolbar-wrapper sticky top-0 z-10 flex flex-wrap gap-4 border-b border-gray-200 bg-white px-3 py-2.5">
+      <div
+        className={twMerge(
+          "md-toolbar-wrapper sticky top-0 z-10 flex flex-wrap gap-4 border-b border-t border-[#e5e7eb] bg-white px-3 py-2.5",
+          props?.className
+        )}
+      >
         <div className="flex items-center divide-x divide-gray-200 [&>:first-child]:rounded-l-sm [&>:first-child]:border-l [&>:last-child]:rounded-r-sm [&>:last-child]:!border-r">
           <ToolBarBtn
             icon="format_bold"
