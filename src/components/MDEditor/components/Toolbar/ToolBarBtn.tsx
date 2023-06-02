@@ -1,7 +1,7 @@
 import Icon from "@components/Icon";
 import { type ICommand } from "@components/MDEditor/commands";
+import { clsx } from "@mantine/core";
 import { type ButtonHTMLAttributes, type DetailedHTMLProps } from "react";
-import { twMerge } from "tailwind-merge";
 import { type IconsName } from "types/material-symbols";
 
 export interface ToolBarBtnProps
@@ -22,7 +22,7 @@ const ToolBarBtn = (props: ToolBarBtnProps) => {
 
   return (
     <button
-      className={twMerge(
+      className={clsx(
         "grid h-6 w-6 place-items-center border-y border-gray-200 bg-white hover:bg-gray-100 disabled:opacity-40",
         className
       )}

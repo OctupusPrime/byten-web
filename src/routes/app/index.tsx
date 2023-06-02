@@ -2,7 +2,7 @@ import { Outlet, Route, useNavigate } from "@tanstack/router";
 import { rootRoute } from "../root";
 import { useAuthContext } from "@context/AuthContext";
 import { useEffect } from "react";
-import AppNavBar from "@components/AppNavBar";
+import AppNavBar from "src/layout/AppNavBar";
 
 export const appRoute = new Route({
   getParentRoute: () => rootRoute,

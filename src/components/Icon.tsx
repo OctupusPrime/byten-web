@@ -1,5 +1,5 @@
+import { clsx } from "@mantine/core";
 import { type DetailedHTMLProps, type HTMLAttributes } from "react";
-import { twMerge } from "tailwind-merge";
 import { type IconsName } from "types/material-symbols";
 
 export interface IconProps
@@ -16,7 +16,7 @@ const Icon = (props: IconProps) => {
   return (
     <i
       {...others}
-      className={twMerge(
+      className={clsx(
         filled ? "material-icon-filled" : "material-icon",
         className
       )}

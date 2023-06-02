@@ -2,10 +2,10 @@ import { Route, useNavigate, useParams } from "@tanstack/router";
 import { appRoute } from "../";
 
 import { z } from "zod";
-import { useEffect, useState } from "react";
+import { Suspense, lazy, useEffect, useState } from "react";
 import { notifications } from "@mantine/notifications";
 
-import { ActionIcon } from "@mantine/core";
+import { ActionIcon, Skeleton } from "@mantine/core";
 import Icon from "@components/Icon";
 
 import useGetNoteById from "@hooks/query/notes/useGetNoteById";
@@ -13,7 +13,9 @@ import parseNotesFromApi from "@utils/parseNotesFromApi";
 import { NoteItem } from "types/data/notes";
 import TextareaAutosize from "react-textarea-autosize";
 
-import MDEditor from "@components/MDEditor";
+import MdEditorLoader from "@components/Loaders/Markdown/Editor";
+
+const MDEditor = lazy(() => import("@components/MDEditor"));
 
 export const appEditNoteRoute = new Route({
   getParentRoute: () => appRoute,
@@ -30,8 +32,13 @@ function EditNote() {
   const params = useParams();
 
   const navigateBack = () => {
+    if (!params.id)
+      return navigate({
+        to: "/app",
+      });
     navigate({
-      to: "/app",
+      to: "/app/note/$id",
+      params: { id: params.id },
     });
   };
 
@@ -74,17 +81,36 @@ function EditNote() {
           />
         </ActionIcon>
       </div>
-      <TextareaAutosize
-        className="my-2 w-full resize-none px-1 text-xl font-medium outline-none"
-        placeholder="Title"
-      />
-      <MDEditor
-        preview="edit"
-        value={mdTest}
-        onChange={(val) => setMdTest(val ?? "")}
-        toolbarClassName="top-[50px]"
-        className="px-1"
-      />
+      {parsedData ? (
+        <>
+          <TextareaAutosize
+            className="my-2 w-full resize-none px-1 text-xl font-medium outline-none"
+            placeholder="Title"
+          />
+          <Suspense fallback={<MdEditorLoader />}>
+            <MDEditor
+              preview="edit"
+              value={mdTest}
+              onChange={(val) => setMdTest(val ?? "")}
+              toolbarClassName="top-[50px]"
+            />
+          </Suspense>
+        </>
+      ) : (
+        <DataLoading />
+      )}
     </section>
+  );
+}
+
+function DataLoading() {
+  return (
+    <>
+      <div className="mb-2 py-[5px]">
+        <Skeleton height={16} width={"83%"} />
+        <Skeleton height={16} width={"40%"} mt={13} />
+      </div>
+      <MdEditorLoader />
+    </>
   );
 }

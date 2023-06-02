@@ -1,5 +1,5 @@
+import { clsx } from "@mantine/core";
 import { type ReactNode } from "react";
-import { twMerge } from "tailwind-merge";
 
 interface SettingsSectionProps {
   title: string;
@@ -18,14 +18,14 @@ const SettingsSection = (props: SettingsSectionProps) => {
 
   return (
     <div
-      className={twMerge(
-        "mt-4 flex justify-between gap-2 items-center flex-col sm:flex-row",
+      className={clsx(
+        "mt-4 flex flex-col items-center justify-between gap-2 sm:flex-row",
         classNames?.root
       )}
     >
-      <div className={twMerge("self-start", classNames?.textWrapper)}>
+      <div className={clsx("self-start", classNames?.textWrapper)}>
         <h2
-          className={twMerge(
+          className={clsx(
             "text-lg font-medium dark:text-white",
             classNames?.title
           )}
@@ -35,8 +35,8 @@ const SettingsSection = (props: SettingsSectionProps) => {
 
         {description ? (
           <p
-            className={twMerge(
-              "text-sm mt-1 dark:text-white",
+            className={clsx(
+              "mt-1 text-sm dark:text-white",
               classNames?.description
             )}
           >

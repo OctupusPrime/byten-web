@@ -38,7 +38,6 @@
     "rehype-prism": "^2.2.2",
     "rehype-react": "^7.2.0",
     "rehype-stringify": "^9.0.3",
-    "tailwind-merge": "^1.12.0",
     "unified": "^10.1.2",
     "zod": "^3.21.4",
     "zustand": "^4.3.8"
@@ -57,6 +56,7 @@
     "postcss": "^8.4.23",
     "prettier": "^2.8.8",
     "prettier-plugin-tailwindcss": "^0.3.0",
+    "rollup-plugin-visualizer": "^5.9.0",
     "tailwindcss": "^3.3.2",
     "typescript": "^5.0.2",
     "vite": "^4.3.2",

@@ -16,7 +16,7 @@ import {
   orderedListCommand,
   unorderedListCommand,
 } from "./list";
-import { codeEdit, codeLive, codePreview } from "./preview";
+import { codeEdit, codePreview } from "./preview";
 import { quote } from "./quote";
 import { strikethrough } from "./strikeThrough";
 import { title } from "./title";
@@ -116,7 +116,6 @@ const getCommands: () => ICommand[] = () => [
 
 const getExtraCommands: () => ICommand[] = () => [
   codeEdit,
-  codeLive,
   codePreview,
   divider,
   fullscreen,
@@ -221,7 +220,6 @@ export {
   orderedListCommand,
   checkedListCommand,
   codeEdit,
-  codeLive,
   codePreview,
   fullscreen,
   // Tool method.

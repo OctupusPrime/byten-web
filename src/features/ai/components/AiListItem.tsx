@@ -1,7 +1,6 @@
 import Icon from "@components/Icon";
-import { Menu, UnstyledButton } from "@mantine/core";
+import { Menu, UnstyledButton, clsx } from "@mantine/core";
 import { ComponentPropsWithoutRef, forwardRef } from "react";
-import { twMerge } from "tailwind-merge";
 
 export interface ListItemButtonProps
   extends ComponentPropsWithoutRef<"button"> {
@@ -17,7 +16,7 @@ const ListItemButton = forwardRef<HTMLButtonElement, ListItemButtonProps>(
 
     return (
       <UnstyledButton
-        className={twMerge("!w-full", className)}
+        className={clsx("!w-full", className)}
         {...others}
         ref={ref}
       >

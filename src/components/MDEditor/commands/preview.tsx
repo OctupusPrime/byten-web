@@ -39,22 +39,3 @@ export const codeEdit: ICommand = {
     }
   },
 };
-
-export const codeLive: ICommand = {
-  name: "live",
-  keyCommand: "preview",
-  value: "live",
-  shortcuts: "ctrlcmd+8",
-  execute: (
-    _state: TextState,
-    api: TextAreaTextApi,
-    dispatch?: React.Dispatch<ContextStore>,
-    executeCommandState?: ExecuteCommandState,
-    shortcuts?: string[]
-  ) => {
-    api.textArea.focus();
-    if (shortcuts && dispatch && executeCommandState) {
-      dispatch({ preview: "live" });
-    }
-  },
-};

@@ -1,7 +1,7 @@
 import React from "react";
 import { ICommand, TextAreaCommandOrchestrator } from "./commands";
 
-export type PreviewType = "live" | "edit" | "preview";
+export type PreviewType = "edit" | "preview";
 
 export interface ContextStore {
   commands?: ICommand<string>[];

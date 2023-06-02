@@ -1,6 +1,5 @@
-import { UnstyledButton } from "@mantine/core";
+import { UnstyledButton, clsx } from "@mantine/core";
 import { type ComponentPropsWithoutRef } from "react";
-import { twMerge } from "tailwind-merge";
 import type { NoteItem } from "types/data/notes";
 
 interface NoteListItemProps
@@ -27,7 +26,7 @@ const NoteListItem = (props: NoteListItemProps) => {
 
   return (
     <UnstyledButton
-      className={twMerge("!w-full", className)}
+      className={clsx("!w-full", className)}
       {...others}
       onClick={() => onClick?.(item)}
     >

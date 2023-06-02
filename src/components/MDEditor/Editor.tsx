@@ -43,7 +43,7 @@ export interface MDEditorProps
    * Event handler for the `onChange` event.
    */
   onChange?: (
-    value?: string,
+    value: string,
     event?: React.ChangeEvent<HTMLTextAreaElement>,
     state?: ContextStore
   ) => void;
@@ -116,7 +116,7 @@ const InternalMDEditor = (
     className,
     value: propsValue,
     direction,
-    preview: previewType = "live",
+    preview: previewType = "edit",
     fullscreen = false,
     overflow = true,
     previewOptions = {},
@@ -273,7 +273,7 @@ const InternalMDEditor = (
     dispatch({ barPopup: { ...setGroupPopFalse(state.barPopup) } });
 
   const changeHandle = (evn: React.ChangeEvent<HTMLTextAreaElement>) => {
-    onChange && onChange(evn.target.value, evn, state);
+    onChange?.(evn.target.value ?? "", evn, state);
     if (textareaProps && textareaProps.onChange) {
       textareaProps.onChange(evn);
     }
@@ -297,7 +297,7 @@ const InternalMDEditor = (
       <div ref={container} className={cls} {...other} onClick={containerClick}>
         {!hideToolbar && <Toolbar className={toolbarClassName} />}
         <div className={`${prefixCls}-content`}>
-          {/(edit|live)/.test(state.preview || "") && (
+          {state.preview === "edit" ? (
             <TextArea
               className={`${prefixCls}-input`}
               prefixCls={prefixCls}
@@ -306,8 +306,8 @@ const InternalMDEditor = (
               onChange={changeHandle}
               onScroll={(e) => handleScroll(e, "text")}
             />
-          )}
-          {/(live|preview)/.test(state.preview || "") && (
+          ) : null}
+          {state.preview === "preview" ? (
             <div ref={previewRef} className={previewClassName}>
               <MarkdownPreview
                 {...previewOptions}
@@ -315,7 +315,7 @@ const InternalMDEditor = (
                 source={state.markdown || ""}
               />
             </div>
-          )}
+          ) : null}
         </div>
       </div>
     </EditorContext.Provider>

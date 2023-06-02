@@ -2,16 +2,18 @@ import { Route, useNavigate, useParams } from "@tanstack/router";
 import { appRoute } from "../";
 
 import { z } from "zod";
-import { useMemo } from "react";
+import { Suspense, lazy, useMemo } from "react";
 import { notifications } from "@mantine/notifications";
 
-import { ActionIcon } from "@mantine/core";
+import { ActionIcon, Skeleton } from "@mantine/core";
 import Icon from "@components/Icon";
-import MarkdownPreview from "@uiw/react-markdown-preview";
-import { NoteItemLoader } from "@features/notes";
 
 import useGetNoteById from "@hooks/query/notes/useGetNoteById";
 import parseNotesFromApi from "@utils/parseNotesFromApi";
+
+import MDPreviewLoader from "@components/Loaders/Markdown/Preview";
+
+const MarkdownPreview = lazy(() => import("@uiw/react-markdown-preview"));
 
 export const appNoteRoute = new Route({
   getParentRoute: () => appRoute,
@@ -104,12 +106,36 @@ function Note() {
             </div>
           </div>
           {parsedData.body ? (
-            <MarkdownPreview source={parsedData.body} />
+            <Suspense fallback={<MDPreviewLoader />}>
+              <MarkdownPreview source={parsedData.body} />
+            </Suspense>
           ) : null}
         </>
       ) : (
-        <NoteItemLoader />
+        <DataLoading />
       )}
     </section>
+  );
+}
+
+function DataLoading() {
+  return (
+    <>
+      <div className="mb-2 py-[5px]">
+        <Skeleton height={16} width={"83%"} />
+        <Skeleton height={16} width={"40%"} mt={13} />
+      </div>
+      <div className="mb-5 flex justify-between">
+        <div className="text-sm">
+          <p className="text-gray-600 dark:text-gray-400">Created at</p>
+          <Skeleton height={14} width={85} my={3} />
+        </div>
+        <div className="text-right text-sm">
+          <p className="text-gray-600 dark:text-gray-400">Updated at</p>
+          <Skeleton height={14} width={85} my={3} />
+        </div>
+      </div>
+      <MDPreviewLoader />
+    </>
   );
 }

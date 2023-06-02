@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/router";
 import { type IconsName } from "types/material-symbols";
-import Icon from "./Icon";
+import Icon from "../components/Icon";
 import { useAuthContext } from "@context/AuthContext";
 import { useTranslation } from "react-i18next";
 

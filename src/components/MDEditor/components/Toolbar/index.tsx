@@ -2,11 +2,17 @@ import { useContext, useMemo } from "react";
 import { type ContextStore, EditorContext } from "../../Context";
 import * as commands from "../../commands";
 import ToolBarBtn from "./ToolBarBtn";
-import { Box, Button, Center, Modal, SegmentedControl } from "@mantine/core";
+import {
+  Box,
+  Button,
+  Center,
+  Modal,
+  SegmentedControl,
+  clsx,
+} from "@mantine/core";
 import Icon from "@components/Icon";
 
 import { useDisclosure } from "@mantine/hooks";
-import { twMerge } from "tailwind-merge";
 
 const NewToolBar = (props?: { className?: string }) => {
   const {
@@ -55,7 +61,7 @@ const NewToolBar = (props?: { className?: string }) => {
   return (
     <>
       <div
-        className={twMerge(
+        className={clsx(
           "md-toolbar-wrapper sticky top-0 z-10 flex flex-wrap gap-4 border-b border-t border-[#e5e7eb] bg-white px-3 py-2.5",
           props?.className
         )}

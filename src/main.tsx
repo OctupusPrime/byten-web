@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import "./index.css";
+import "./assets/index.css";
 import "@lib/i18.ts";
 
 import { AuthContextProvider } from "@context/AuthContext.tsx";
@@ -14,6 +14,8 @@ import App from "./App.tsx";
 //TODO change locale spelling from ua to uk and add dayjs change locale in store
 
 //TOTO add notification to each errors
+
+//TODO add md-loader component on import
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
