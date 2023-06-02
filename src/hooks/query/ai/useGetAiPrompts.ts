@@ -6,7 +6,9 @@ import { type QueryOptions } from "types/queryHooks";
 export type AiPromptsData = aiItem[];
 
 export const reqAiPrompts = async () => {
-  const { data } = await axiosInstance.get<AiPromptsData>("ai-prompts/prompt");
+  const { data } = await axiosInstance.get<AiPromptsData>(
+    "ai-prompts?type=prompt"
+  );
 
   return data;
 };

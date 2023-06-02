@@ -7,7 +7,7 @@ export type ModifyPromptsData = aiItem[];
 
 export const reqModifyPrompts = async () => {
   const { data } = await axiosInstance.get<ModifyPromptsData>(
-    "ai-prompts/modify"
+    "ai-prompts?type=modify"
   );
 
   return data;
@@ -19,6 +19,7 @@ export default function useGetModifyPrompts(
   return useQuery({
     queryKey: ["ai", "text-modify"],
     queryFn: reqModifyPrompts,
+    retry: 3,
     ...options,
   });
 }

@@ -1,6 +1,6 @@
 // import React from "react";
 import { createSyncStoragePersister } from "@tanstack/query-sync-storage-persister";
-import { type QueryClient } from "@tanstack/react-query";
+import { QueryClient } from "@tanstack/react-query";
 import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client";
 import { lazy, type ReactNode } from "react";
 
@@ -16,16 +16,27 @@ const ReactQueryDevtools =
         }))
       );
 
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false,
+
+      cacheTime: 1000 * 60 * 60 * 24, // 24 hours
+      staleTime: 1000 * 60 * 60, // 1 hour
+      retry: 3,
+    },
+  },
+});
+
 const persister = createSyncStoragePersister({
   storage: window.localStorage,
 });
 
 interface QueryContextProps {
   children: ReactNode;
-  queryClient: QueryClient;
 }
 
-const QueryContextProvider = ({ children, queryClient }: QueryContextProps) => {
+const QueryContextProvider = ({ children }: QueryContextProps) => {
   return (
     <PersistQueryClientProvider
       client={queryClient}
@@ -38,7 +49,7 @@ const QueryContextProvider = ({ children, queryClient }: QueryContextProps) => {
       }}
     >
       {children}
-      <ReactQueryDevtools position="top-right" />
+      <ReactQueryDevtools position="bottom-right" />
     </PersistQueryClientProvider>
   );
 };

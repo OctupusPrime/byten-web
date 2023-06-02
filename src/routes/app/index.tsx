@@ -30,7 +30,7 @@ function App() {
     >
       <AppNavBar />
       <main className="mx-auto flex min-h-full w-full max-w-3xl p-4">
-        <Outlet />
+        {isLoading ? null : <Outlet />}
       </main>
     </div>
   );

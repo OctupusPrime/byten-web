@@ -10,21 +10,8 @@ import {
 import { Button, Tabs } from "@mantine/core";
 import { useEffect, useState } from "react";
 
-import { reqAiPrompts } from "@hooks/query/ai/useGetAiPrompts";
-import { reqModifyPrompts } from "@hooks/query/ai/useGetModifyPrompts";
-
 export const appAiRoute = new Route({
   getParentRoute: () => appRoute,
-  loader: ({ context }) => {
-    // context.queryClient.ensureQueryData({
-    //   queryKey: ["ai", "prompt"],
-    //   queryFn: reqAiPrompts,
-    // });
-    // context.queryClient.ensureQueryData({
-    //   queryKey: ["ai", "text-modify"],
-    //   queryFn: reqModifyPrompts,
-    // });
-  },
   path: "ai",
   component: Ai,
 });

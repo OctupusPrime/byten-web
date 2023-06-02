@@ -4,7 +4,7 @@ import type { aiItem } from "types/data/ai";
 
 const reqDeletePrompt = async (item: aiItem) => {
   const { data } = await axiosInstance.delete<aiItem>(
-    `ai-prompts/${item.id}/${item.type}`
+    `ai-prompts/${item.id}?type=${item.type}`
   );
 
   return data;
