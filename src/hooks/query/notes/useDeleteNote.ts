@@ -21,7 +21,7 @@ export default function useDeleteNote() {
       });
       await queryClient.fetchQuery({ queryKey: ["notes"], queryFn: reqNotes });
     },
-    onSettled: () => {
+    onError: () => {
       queryClient.invalidateQueries({ queryKey: ["notes"] });
     },
   });

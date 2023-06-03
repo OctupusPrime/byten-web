@@ -16,16 +16,21 @@ import { appAiTextModifyRoute } from "./routes/app/ai/textModify";
 import { appAiPromptsRoute } from "./routes/app/ai/aiPrompts";
 //settings
 import { appSettingsRoute } from "./routes/app/settings";
+//not found
+import { NotFoundRoute } from "./routes/notFound";
+import { appNotFoundRoute } from "./routes/app/appNotFound";
 
 export const routeTree = rootRoute.addChildren([
   indexRoute,
   loginRoute,
+  NotFoundRoute,
   appRoute.addChildren([
     appDashboardRoute,
     appAiRoute.addChildren([appAiTextModifyRoute, appAiPromptsRoute]),
     appSettingsRoute,
     appNoteRoute,
     appEditNoteRoute,
+    appNotFoundRoute,
   ]),
 ]);
 
