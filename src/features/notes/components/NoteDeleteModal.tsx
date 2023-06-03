@@ -1,23 +1,25 @@
 import DeleteConformationModal, {
   type DeleteConformationModalProps,
 } from "@components/Modals/DeleteConformationModal";
-import useDeletePrompt from "@hooks/query/ai/useDeletePrompt";
-import { notifications } from "@mantine/notifications";
-import type { aiItem } from "types/data/ai";
 
-export interface AiItemDeleteModalProps
+import useDeleteNote from "@hooks/query/notes/useDeleteNote";
+import { notifications } from "@mantine/notifications";
+
+import type { NoteItem } from "types/data/notes";
+
+export interface NoteDeleteModalProps
   extends Omit<
     DeleteConformationModalProps,
     "title" | "description" | "onSubmit" | "isSubmitLoading"
   > {
-  state?: aiItem;
+  state?: NoteItem;
   onSuccess?: () => void;
 }
 
-const AiItemDeleteModal = (props: AiItemDeleteModalProps) => {
+const NoteDeleteModal = (props: NoteDeleteModalProps) => {
   const { state, onClose, onSuccess, ...others } = props;
 
-  const { mutate, isLoading } = useDeletePrompt();
+  const { mutate, isLoading } = useDeleteNote();
 
   const handleSubmit = () => {
     if (!state) return onClose();
@@ -29,7 +31,7 @@ const AiItemDeleteModal = (props: AiItemDeleteModalProps) => {
       },
       onError: () => {
         notifications.show({
-          title: "Cannot delete prompt",
+          title: "Cannot delete note",
           message: "Try again later",
           color: "red",
         });
@@ -43,10 +45,10 @@ const AiItemDeleteModal = (props: AiItemDeleteModalProps) => {
       onClose={onClose}
       onSubmit={handleSubmit}
       isSubmitLoading={isLoading}
-      title="AI Prompt Deletion Confirmation"
-      description="Deleting this AI prompt will permanently remove it from your collection. "
+      title="Note Deletion Confirmation"
+      description="Deleting this note will permanently remove it from your notes. "
     />
   );
 };
 
-export default AiItemDeleteModal;
+export default NoteDeleteModal;

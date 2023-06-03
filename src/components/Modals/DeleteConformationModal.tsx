@@ -1,4 +1,4 @@
-import { Button, Modal, ModalProps } from "@mantine/core";
+import { Button, Modal, type ModalProps } from "@mantine/core";
 
 export interface DeleteConformationModalProps
   extends Omit<ModalProps, "children"> {

@@ -62,7 +62,7 @@ const NewToolBar = (props?: { className?: string }) => {
     <>
       <div
         className={clsx(
-          "md-toolbar-wrapper sticky top-0 z-10 flex flex-wrap gap-4 border-b border-t border-[#e5e7eb] bg-white px-3 py-2.5",
+          "md-toolbar-wrapper sticky top-0 z-10 flex flex-wrap gap-4 bg-white px-3 py-2.5 dark:bg-neutral-800",
           props?.className
         )}
       >

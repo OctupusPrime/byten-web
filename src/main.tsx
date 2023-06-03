@@ -15,7 +15,7 @@ import App from "./App.tsx";
 
 //TOTO add notification to each errors
 
-//TODO add md-loader component on import
+//TODO add dark theme conf btn to md loader
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
