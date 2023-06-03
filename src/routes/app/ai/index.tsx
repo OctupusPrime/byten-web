@@ -46,10 +46,6 @@ function Ai() {
 
   return (
     <section className="w-full">
-      <h1 className="my-2 text-center text-2xl font-semibold dark:text-white">
-        Ai
-      </h1>
-
       <StyledTabs
         classNames={{
           tabsList: "!justify-center",

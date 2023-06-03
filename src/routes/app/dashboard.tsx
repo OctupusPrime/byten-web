@@ -1,10 +1,19 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Route, useNavigate } from "@tanstack/router";
 import { appRoute } from ".";
 
 import Icon from "@components/Icon";
-import { Button, TextInput, UnstyledButton } from "@mantine/core";
-import { NoteListItem, NoteListItemLoader } from "@features/notes";
+import {
+  Button,
+  LoadingOverlay,
+  TextInput,
+  UnstyledButton,
+} from "@mantine/core";
+import {
+  NoteListItem,
+  NoteListItemLoader,
+  useCreateNoteModalStore,
+} from "@features/notes";
 
 import useGetNotes from "@hooks/query/notes/useGetNotes";
 import type { NoteItem } from "types/data/notes";
@@ -12,6 +21,9 @@ import type { NoteItem } from "types/data/notes";
 import parseNotesFromApi from "@utils/parseNotesFromApi";
 
 import dayjs from "@lib/dayjs";
+import CreateNoteModal from "@features/notes/components/CreateNoteModal";
+import useCreateNote from "@hooks/query/notes/useCreateNote";
+import { notifications } from "@mantine/notifications";
 
 export const appDashboardRoute = new Route({
   getParentRoute: () => appRoute,
@@ -48,6 +60,7 @@ function Dashboard() {
         even: evenItems,
         isItemsExist,
         isTodayExist,
+        isSuccess: false,
       };
 
     for (var i = 0; i < data.length; i++) {
@@ -73,14 +86,34 @@ function Dashboard() {
       even: evenItems,
       isItemsExist,
       isTodayExist,
+      isSuccess: true,
     };
-  }, [data]);
+  }, [data, isSuccess]);
 
   const handleOpenNote = (note: NoteItem) => {
     navigate({
       to: "/app/note/$id",
       params: {
         id: note.id,
+      },
+    });
+  };
+
+  const openCreateModal = useCreateNoteModalStore((state) => state.openModal);
+
+  const { mutate, isLoading } = useCreateNote();
+
+  const handleCreateTodayNote = () => {
+    mutate(newTodayNote.title, {
+      onSuccess: (data) => {
+        handleOpenNote(data as any);
+      },
+      onError: () => {
+        notifications.show({
+          title: "Cannot create note",
+          message: "Try again later",
+          color: "red",
+        });
       },
     });
   };
@@ -101,27 +134,38 @@ function Dashboard() {
           }}
           variant="gradient"
           gradient={{ from: "teal", to: "blue", deg: 60 }}
+          disabled={!isSuccess}
+          onClick={openCreateModal}
         >
           Create Note
         </Button>
       </div>
-      {isSuccess ? (
+      {parsedData.isSuccess ? (
         <div className="grid grid-cols-2 gap-3">
           <div className="col-span-2">
             <h3 className="mb-2  font-medium text-gray-600 dark:text-gray-400">
               Today
             </h3>
             {parsedData.isTodayExist ? (
-              <>
+              <ul className="flex flex-col flex-wrap gap-3">
                 {parsedData.today.map((el) => (
-                  <NoteListItem item={el} key={el.id} />
+                  <NoteListItem
+                    item={el}
+                    key={el.id}
+                    onClick={handleOpenNote}
+                  />
                 ))}
-              </>
+              </ul>
             ) : (
-              <UnstyledButton className={"!w-full"}>
+              <UnstyledButton
+                className={"!relative !w-full"}
+                onClick={handleCreateTodayNote}
+                disabled={isLoading}
+              >
                 <div
                   className={`rounded bg-gray-50 px-3 py-2 dark:bg-neutral-800`}
                 >
+                  <LoadingOverlay visible={isLoading} />
                   <h3 className="break-words font-medium dark:text-white">
                     {newTodayNote.title}
                   </h3>
@@ -160,11 +204,40 @@ function Dashboard() {
           variant="gradient"
           gradient={{ from: "teal", to: "blue", deg: 60 }}
           disabled={!isSuccess}
+          onClick={openCreateModal}
         >
           Create Note
         </Button>
       </div>
+      <NoteModals />
     </section>
+  );
+}
+
+function NoteModals() {
+  const navigate = useNavigate();
+
+  const { isVisible, closeModal } = useCreateNoteModalStore((state) => ({
+    isVisible: state.isVisible,
+    closeModal: state.closeModal,
+  }));
+
+  return (
+    <>
+      <CreateNoteModal
+        centered
+        opened={isVisible}
+        onClose={closeModal}
+        onSuccess={(item) =>
+          navigate({
+            to: "/app/note/$id",
+            params: {
+              id: item.id,
+            },
+          })
+        }
+      />
+    </>
   );
 }
 

@@ -69,7 +69,11 @@ const AiItemCreateOrEditModal = (props: AiItemCreateOrEditModalProps) => {
           type: state.type,
           id: state.id,
         },
+
         {
+          onSuccess: () => {
+            onClose();
+          },
           onError: () => {
             notifications.show({
               title: "Cannot update prompt",
@@ -79,7 +83,6 @@ const AiItemCreateOrEditModal = (props: AiItemCreateOrEditModalProps) => {
           },
         }
       );
-      onClose();
     } else {
       createMutate(
         {

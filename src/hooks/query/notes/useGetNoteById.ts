@@ -4,12 +4,10 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { type NoteItemApi } from "types/data/notes";
 import { type QueryOptions } from "types/queryHooks";
 
-import parseNotesFromApi from "@utils/parseNotesFromApi";
-
 export const reqNotes = async (id: string) => {
   const { data } = await axiosInstance.get<NoteItemApi>(`notes/${id}`);
 
-  return parseNotesFromApi(data);
+  return data;
 };
 
 export default function useGetNoteById(

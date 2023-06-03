@@ -1,11 +1,22 @@
 import axiosInstance from "@lib/axios";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import parseNotesFromApi from "@utils/parseNotesFromApi";
-import type { NoteItem, NoteItemApi } from "types/data/notes";
+import type { Dayjs } from "dayjs";
+import type { NoteItemApi } from "types/data/notes";
 
-const reqUpdateNote = async (
-  item: Omit<NoteItem, "createdAt" | "updatedAt">
-) => {
+type NoteItemReq = {
+  id: string;
+  title: string;
+  body?: string;
+  color: string;
+  createdAt?: Dayjs;
+  updatedAt?: Dayjs;
+};
+
+const reqUpdateNote = async (item: NoteItemReq) => {
+  delete item.createdAt;
+  delete item.updatedAt;
+
   const { data } = await axiosInstance.put<NoteItemApi>("notes", item);
 
   return parseNotesFromApi(data);
@@ -15,7 +26,13 @@ export default function useUpdateNote() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: reqUpdateNote,
+    mutationFn: (reqData: NoteItemReq) => {
+      const noteData = queryClient.getQueryData(["note", reqData.id]);
+
+      if (!noteData) return new Promise(() => undefined);
+
+      return reqUpdateNote(reqData);
+    },
     onMutate: async (item) => {
       await queryClient.cancelQueries({ queryKey: ["notes"] });
       await queryClient.cancelQueries({ queryKey: ["note", item.id] });
@@ -34,6 +51,8 @@ export default function useUpdateNote() {
       const updatedItem = {
         ...previusData,
         ...item,
+        createdAt: previusData.createdAt,
+        updatedAt: previusData.updatedAt,
       };
 
       queryClient.setQueryData<NoteItemApi[]>(["notes"], (old) =>
@@ -66,6 +85,5 @@ export default function useUpdateNote() {
         queryKey: ["note", context.previusData.id],
       });
     },
-    retry: 3,
   });
 }

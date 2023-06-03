@@ -16,7 +16,7 @@ export interface NoteDeleteModalProps
   onSuccess?: () => void;
 }
 
-const NoteDeleteModal = (props: NoteDeleteModalProps) => {
+const DeleteNoteModal = (props: NoteDeleteModalProps) => {
   const { state, onClose, onSuccess, ...others } = props;
 
   const { mutate, isLoading } = useDeleteNote();
@@ -51,4 +51,4 @@ const NoteDeleteModal = (props: NoteDeleteModalProps) => {
   );
 };
 
-export default NoteDeleteModal;
+export default DeleteNoteModal;

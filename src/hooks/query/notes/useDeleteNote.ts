@@ -2,6 +2,7 @@ import axiosInstance from "@lib/axios";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import type { NoteItem, NoteItemApi } from "types/data/notes";
+import { reqNotes } from "./useGetNotes";
 
 const reqDeleteNote = async (item: NoteItem) => {
   const { data } = await axiosInstance.delete<NoteItemApi>(`notes/${item.id}`);
@@ -14,13 +15,13 @@ export default function useDeleteNote() {
 
   return useMutation({
     mutationFn: reqDeleteNote,
-    onSuccess(_data, variables) {
+    onSuccess: async (_data, variables) => {
       queryClient.removeQueries({
         queryKey: ["note", variables.id],
-        exact: true,
       });
+      await queryClient.fetchQuery({ queryKey: ["notes"], queryFn: reqNotes });
     },
-    onSettled() {
+    onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ["notes"] });
     },
   });

@@ -7,11 +7,15 @@ const useDebounceCallback = <T extends any>(
   fn: (data: T) => void,
   delay: number
 ) => {
-  const debouncedFn = useRef(debounce(fn, delay)).current;
+  const debouncedFn = useRef(
+    debounce(() => fn(dataRef.current), delay)
+  ).current;
+  const dataRef = useRef<T>(data);
 
   useEffect(() => {
+    dataRef.current = data;
     return () => {
-      debouncedFn(data);
+      debouncedFn();
     };
   }, [data]);
 };

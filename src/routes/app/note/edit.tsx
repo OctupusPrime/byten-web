@@ -1,4 +1,4 @@
-import { Suspense, lazy, useEffect, useRef, useState } from "react";
+import { Suspense, lazy, useEffect } from "react";
 import { Route, useNavigate, useParams } from "@tanstack/router";
 import { appRoute } from "../";
 
@@ -11,12 +11,12 @@ import { ActionIcon, Skeleton } from "@mantine/core";
 import Icon from "@components/Icon";
 import TextareaAutosize from "react-textarea-autosize";
 import MdEditorLoader from "@components/Loaders/Markdown/Editor";
-import { NoteDeleteModal, useDeleteNoteModalStore } from "@features/notes";
+import { DeleteNoteModal, useDeleteNoteModalStore } from "@features/notes";
 
 import useGetNoteById from "@hooks/query/notes/useGetNoteById";
 import useUpdateNote from "@hooks/query/notes/useUpdateNote";
 import parseNotesFromApi from "@utils/parseNotesFromApi";
-import useDebounceCallback from "@hooks/useDebounceCallBack";
+import useDebounceCallback from "@hooks/useDebounceCallback";
 
 const MDEditor = lazy(() => import("@components/MDEditor"));
 
@@ -52,15 +52,30 @@ function EditNote() {
         message: "Try again later",
         color: "red",
       });
-      navigateBack();
+      return navigate({
+        to: "/app",
+      });
     },
   });
 
   const [parsedData, setParsedData] = useSetState<NoteItem>({} as NoteItem);
 
+  const { mutate } = useUpdateNote();
+
   useDebounceCallback<NoteItem>(
     parsedData,
-    (data) => console.log("update", data),
+    (data) => {
+      if (!data.id || !data.title) return;
+      mutate(data, {
+        onError: () => {
+          notifications.show({
+            title: "Cannot update note",
+            message: "Try again later",
+            color: "red",
+          });
+        },
+      });
+    },
     1000
   );
 
@@ -103,7 +118,7 @@ function EditNote() {
           />
         </ActionIcon>
       </div>
-      {isSuccess ? (
+      {parsedData?.title ? (
         <>
           <TextareaAutosize
             value={parsedData.title}
@@ -138,7 +153,7 @@ function NotePageModals() {
     }));
 
   return (
-    <NoteDeleteModal
+    <DeleteNoteModal
       state={deleteState}
       opened={isVisibleDelete}
       onClose={closeDeleteModal}
