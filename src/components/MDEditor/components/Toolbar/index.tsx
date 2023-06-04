@@ -44,14 +44,6 @@ const NewToolBar = (props?: { className?: string }) => {
     return preview === "preview" ? true : false;
   }, [preview]);
 
-  const handleAiCommand = () => {
-    const command = { ...commands.ai };
-
-    command.value = "val.replace(/({{text}})\n\n/gi, state1.selectedText)";
-
-    handleExecuteCommand(command);
-  };
-
   const [opened, { open, close }] = useDisclosure(false);
 
   const [selectedText, setSelectedText] = useState<string | undefined>(
@@ -66,6 +58,14 @@ const NewToolBar = (props?: { className?: string }) => {
 
     setSelectedText(selectedText ? selectedText : undefined);
     open();
+  };
+
+  const handleAiCommand = (value: string) => {
+    const command = { ...commands.ai };
+
+    command.value = value;
+
+    handleExecuteCommand(command);
   };
 
   return (
@@ -222,6 +222,7 @@ const NewToolBar = (props?: { className?: string }) => {
         opened={opened}
         onClose={close}
         state={selectedText}
+        onSubmit={handleAiCommand}
       />
     </>
   );

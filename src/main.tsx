@@ -13,7 +13,7 @@ import App from "./App.tsx";
 
 //TODO change locale spelling from ua to uk and add dayjs change locale in store
 
-//TOTO add notification to each errors
+//TOTO add notification to each errors to hooks
 
 //TODO add dark theme conf btn to md loader
 

@@ -5,10 +5,9 @@ import {
   useLocalizationStore,
   useThemeStore,
 } from "@features/settings";
-import { Button, SegmentedControl, Select } from "@mantine/core";
+import { SegmentedControl, Select } from "@mantine/core";
 import { Locale } from "types/i18n";
 import { useTranslation } from "react-i18next";
-import useAiAutoComplete from "@hooks/query/ai/useAiAutoComplete";
 
 export const appSettingsRoute = new Route({
   getParentRoute: () => appRoute,
@@ -35,18 +34,11 @@ function Settings() {
     i18n.changeLanguage(lang);
   };
 
-  const { mutate } = useAiAutoComplete();
-
-  const handleAiTest = () => {
-    mutate();
-  };
-
   return (
     <section className="w-full">
       <h1 className="mt-3 text-center text-2xl font-semibold dark:text-white">
         Settings
       </h1>
-      <Button onClick={handleAiTest}>Test</Button>
 
       <SettingsSection title="Theme" description="Change app appearance.">
         <SegmentedControl

@@ -106,9 +106,11 @@ function Note() {
             </div>
           </div>
           {parsedData.body ? (
-            <Suspense fallback={<MDPreviewLoader />}>
-              <MarkdownPreview source={parsedData.body} />
-            </Suspense>
+            <div className="overflow-hidden">
+              <Suspense fallback={<MDPreviewLoader />}>
+                <MarkdownPreview source={parsedData.body} />
+              </Suspense>
+            </div>
           ) : null}
         </>
       ) : (
