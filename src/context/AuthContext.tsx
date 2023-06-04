@@ -16,11 +16,10 @@ import {
   browserSessionPersistence,
 } from "firebase/auth";
 import type { FirebaseError } from "firebase/app";
-import { googleProvider, githubProvider } from "@service/firebaseProviders";
+
 import { notifications } from "@mantine/notifications";
 
-import { useAuthStatusStore } from "@features/login";
-
+import { googleProvider, githubProvider } from "@service/firebaseProviders";
 import { auth } from "@lib/firebase";
 
 interface AuthContextProps {

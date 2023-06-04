@@ -17,10 +17,6 @@ import App from "./App.tsx";
 
 //TODO add dark theme conf btn to md loader
 
-//TODO add error message to FirebaseError: Firebase: Error (auth/account-exists-with-different-credential). in here auth function call
-
-//TODO move to context localization and theme listener
-
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
     <AuthContextProvider>

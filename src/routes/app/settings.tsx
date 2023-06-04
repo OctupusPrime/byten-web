@@ -6,8 +6,6 @@ import {
   useThemeStore,
 } from "@features/settings";
 import { SegmentedControl, Select } from "@mantine/core";
-import { Locale } from "types/i18n";
-import { useTranslation } from "react-i18next";
 
 export const appSettingsRoute = new Route({
   getParentRoute: () => appRoute,
@@ -16,23 +14,15 @@ export const appSettingsRoute = new Route({
 });
 
 function Settings() {
-  const { i18n } = useTranslation();
-
-  const [theme, setTheme] = useThemeStore((state) => [
-    state.state,
-    state.changeTheme,
+  const [appTheme, setAppTheme] = useThemeStore((state) => [
+    state.appTheme,
+    state.changeAppTheme,
   ]);
 
   const [localization, setLocalization] = useLocalizationStore((state) => [
     state.state,
     state.changeLocale,
   ]);
-
-  const handleLocalizationChange = (lang: Locale) => {
-    setLocalization(lang);
-
-    i18n.changeLanguage(lang);
-  };
 
   return (
     <section className="w-full">
@@ -42,8 +32,8 @@ function Settings() {
 
       <SettingsSection title="Theme" description="Change app appearance.">
         <SegmentedControl
-          value={theme}
-          onChange={setTheme}
+          value={appTheme}
+          onChange={setAppTheme}
           data={[
             { label: "Light", value: "light" },
             { label: "Auto", value: "auto" },
@@ -57,7 +47,7 @@ function Settings() {
       <SettingsSection title="Localization">
         <Select
           value={localization}
-          onChange={handleLocalizationChange}
+          onChange={setLocalization}
           data={[
             { value: "en", label: "English (US)" },
             { value: "ua", label: "Українська (UA)" },
