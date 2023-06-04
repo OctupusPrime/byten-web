@@ -184,16 +184,21 @@ function Dashboard() {
             ) : null}
           </div>
 
-          <ul className="flex flex-col flex-wrap gap-3">
-            {parsedData.even.map((el) => (
-              <NoteListItem item={el} key={el.id} onClick={handleOpenNote} />
-            ))}
-          </ul>
-          <ul className="flex flex-col flex-wrap gap-3">
-            {parsedData.odd.map((el) => (
-              <NoteListItem item={el} key={el.id} onClick={handleOpenNote} />
-            ))}
-          </ul>
+          {parsedData.even.length ? (
+            <ul className="flex flex-col flex-wrap gap-3">
+              {parsedData.even.map((el) => (
+                <NoteListItem item={el} key={el.id} onClick={handleOpenNote} />
+              ))}
+            </ul>
+          ) : null}
+
+          {parsedData.odd.length ? (
+            <ul className="flex flex-col flex-wrap gap-3">
+              {parsedData.odd.map((el) => (
+                <NoteListItem item={el} key={el.id} onClick={handleOpenNote} />
+              ))}
+            </ul>
+          ) : null}
         </div>
       ) : (
         <DataLoading />
@@ -225,7 +230,6 @@ function NoteModals() {
   return (
     <>
       <CreateNoteModal
-        centered
         opened={isVisible}
         onClose={closeModal}
         onSuccess={(item) =>

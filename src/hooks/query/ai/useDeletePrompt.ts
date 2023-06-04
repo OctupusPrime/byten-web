@@ -21,7 +21,14 @@ export default function useDeletePrompt() {
 
       return { queryKey };
     },
-    onSettled(_data, _error, _variables, context) {
+    onSuccess: (_data, item, context) => {
+      if (!context) return;
+
+      queryClient.setQueryData(context.queryKey, (old: any) =>
+        old?.filter((el: aiItem) => el.id !== item.id)
+      );
+    },
+    onError: (_error, _variables, context) => {
       if (!context) return;
 
       queryClient.invalidateQueries({ queryKey: context.queryKey });

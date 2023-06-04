@@ -1,18 +1,13 @@
-import { useContext, useMemo } from "react";
+import { useContext, useMemo, useState } from "react";
 import { type ContextStore, EditorContext } from "../../Context";
 import * as commands from "../../commands";
-import ToolBarBtn from "./ToolBarBtn";
-import {
-  Box,
-  Button,
-  Center,
-  Modal,
-  SegmentedControl,
-  clsx,
-} from "@mantine/core";
-import Icon from "@components/Icon";
 
 import { useDisclosure } from "@mantine/hooks";
+
+import Icon from "@components/Icon";
+import { AiAutoCompleteModal } from "@features/ai";
+import ToolBarBtn from "./ToolBarBtn";
+import { Box, Button, Center, SegmentedControl, clsx } from "@mantine/core";
 
 const NewToolBar = (props?: { className?: string }) => {
   const {
@@ -20,6 +15,7 @@ const NewToolBar = (props?: { className?: string }) => {
     preview,
     dispatch,
     barPopup = {},
+    textarea,
   } = useContext(EditorContext);
 
   const handleExecuteCommand = (command: commands.ICommand) => {
@@ -57,6 +53,20 @@ const NewToolBar = (props?: { className?: string }) => {
   };
 
   const [opened, { open, close }] = useDisclosure(false);
+
+  const [selectedText, setSelectedText] = useState<string | undefined>(
+    undefined
+  );
+
+  const handleOpenAiModal = () => {
+    const selectedText = textarea.value.substring(
+      textarea.selectionStart,
+      textarea.selectionEnd
+    );
+
+    setSelectedText(selectedText ? selectedText : undefined);
+    open();
+  };
 
   return (
     <>
@@ -177,7 +187,7 @@ const NewToolBar = (props?: { className?: string }) => {
             gradient={{ from: "teal", to: "blue", deg: 60 }}
             size="xs"
             disabled={isBtnDisabled}
-            onClick={open}
+            onClick={handleOpenAiModal}
           >
             Ai
           </Button>
@@ -208,18 +218,11 @@ const NewToolBar = (props?: { className?: string }) => {
           />
         </div>
       </div>
-      <Modal opened={opened} onClose={close} title="Authentication">
-        {/* Modal content */}
-        <Button
-          variant="gradient"
-          gradient={{ from: "teal", to: "blue", deg: 60 }}
-          size="xs"
-          disabled={isBtnDisabled}
-          onClick={handleAiCommand}
-        >
-          test
-        </Button>
-      </Modal>
+      <AiAutoCompleteModal
+        opened={opened}
+        onClose={close}
+        state={selectedText}
+      />
     </>
   );
 };
