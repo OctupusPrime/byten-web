@@ -4,8 +4,8 @@ const GoogleIcon = (props: React.ComponentPropsWithoutRef<"svg">) => {
       xmlns="http://www.w3.org/2000/svg"
       preserveAspectRatio="xMidYMid"
       viewBox="0 0 256 262"
-      width="0.9rem"
-      height="0.9rem"
+      width="1.2rem"
+      height="1.2rem"
       {...props}
     >
       <path

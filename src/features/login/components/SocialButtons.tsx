@@ -6,37 +6,32 @@ interface BtnProps extends ButtonProps {
   onClick?: () => void;
 }
 
-export function GoogleButton(props: BtnProps) {
+export function GoogleButton({ children, ...props }: BtnProps) {
   return (
     <Button
       leftIcon={<GoogleIcon />}
       radius="xl"
       variant="default"
       color="gray"
+      size="md"
       {...props}
     >
-      Google
+      {children}
     </Button>
   );
 }
 
-export function GithubButton(props: BtnProps) {
+export function GithubButton({ children, ...props }: BtnProps) {
   return (
     <Button
       radius="xl"
       leftIcon={<GithubIcon />}
-      sx={(theme) => ({
-        backgroundColor:
-          theme.colors.dark[theme.colorScheme === "dark" ? 9 : 6],
-        color: "#fff",
-        "&:hover": {
-          backgroundColor:
-            theme.colors.dark[theme.colorScheme === "dark" ? 9 : 6],
-        },
-      })}
+      variant="default"
+      color="gray"
+      size="md"
       {...props}
     >
-      Github
+      {children}
     </Button>
   );
 }

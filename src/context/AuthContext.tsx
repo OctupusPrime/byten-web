@@ -1,18 +1,27 @@
 import {
-  type User,
-  onAuthStateChanged,
-  signInWithRedirect,
-  signOut,
-} from "firebase/auth";
-import {
   useContext,
   type ReactNode,
   createContext,
   useState,
   useEffect,
 } from "react";
-import { auth } from "@lib/firebase";
+
+import {
+  type User,
+  onAuthStateChanged,
+  signInWithRedirect,
+  signOut,
+  getRedirectResult,
+  setPersistence,
+  browserSessionPersistence,
+} from "firebase/auth";
+import type { FirebaseError } from "firebase/app";
 import { googleProvider, githubProvider } from "@service/firebaseProviders";
+import { notifications } from "@mantine/notifications";
+
+import { useAuthStatusStore } from "@features/login";
+
+import { auth } from "@lib/firebase";
 
 interface AuthContextProps {
   children: ReactNode;
@@ -22,8 +31,8 @@ type AuthContext = {
   session: User | null;
   isLoading: boolean;
   getToken: () => Promise<string | undefined>;
-  signInWithGoogle: () => void;
-  signInWithGithub: () => void;
+  signInWithGoogle: () => Promise<void>;
+  signInWithGithub: () => Promise<void>;
   signOut: () => Promise<void>;
 };
 
@@ -31,8 +40,8 @@ const AuthContext = createContext<AuthContext>({
   session: null,
   isLoading: true,
   getToken: async () => await undefined,
-  signInWithGoogle: () => 1,
-  signInWithGithub: () => 1,
+  signInWithGoogle: async () => await undefined,
+  signInWithGithub: async () => await undefined,
   signOut: async () => await undefined,
 });
 
@@ -40,14 +49,59 @@ export const AuthContextProvider = ({ children }: AuthContextProps) => {
   const [session, setSession] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
-    setSession(auth.currentUser);
+  const setUserSession = (session: User | null) => {
+    setSession(session);
+    setIsLoading(false);
+  };
 
-    const unsubscribe = onAuthStateChanged(auth, (currentSession) => {
-      console.log(currentSession);
-      setIsLoading(false);
-      setSession(currentSession);
-    });
+  useEffect(() => {
+    const currUser = auth.currentUser;
+
+    if (currUser) {
+      setUserSession(currUser);
+    }
+
+    getRedirectResult(auth)
+      .then((result) => {
+        if (!result) return;
+
+        const user = result.user;
+
+        setUserSession(user);
+      })
+      .catch((err: FirebaseError) => {
+        if (err.code !== "auth/account-exists-with-different-credential")
+          return;
+
+        if (!err.customData)
+          return notifications.show({
+            title: "Account exists with different credential",
+            message: "Try to use different auth provider",
+            color: "red",
+            autoClose: false,
+          });
+
+        const isGoogleVerify = (
+          (err.customData?._tokenResponse as any)?.verifiedProvider as string[]
+        )?.find((el) => el === "google.com");
+
+        if (isGoogleVerify)
+          return notifications.show({
+            title: "Account exists with different credential",
+            message: `Try to use google auth with ${err.customData.email} email.`,
+            color: "red",
+            autoClose: false,
+          });
+
+        notifications.show({
+          title: "Account exists with different credential",
+          message: "Try to use different auth provider",
+          color: "red",
+          autoClose: false,
+        });
+      });
+
+    const unsubscribe = onAuthStateChanged(auth, setUserSession);
 
     return () => unsubscribe();
   }, []);
@@ -58,11 +112,13 @@ export const AuthContextProvider = ({ children }: AuthContextProps) => {
     return token;
   };
 
-  const signInWithGoogle = () => {
+  const signInWithGoogle = async () => {
+    await setPersistence(auth, browserSessionPersistence);
     signInWithRedirect(auth, googleProvider);
   };
 
-  const signInWithGithub = () => {
+  const signInWithGithub = async () => {
+    await setPersistence(auth, browserSessionPersistence);
     signInWithRedirect(auth, githubProvider);
   };
 
@@ -97,8 +153,8 @@ export function useAuthContext() {
     session: null,
     isLoading: true,
     getToken: async () => await undefined,
-    signInWithGoogle: () => 1,
-    signInWithGithub: () => 1,
+    signInWithGoogle: async () => await undefined,
+    signInWithGithub: async () => await undefined,
     signOut: async () => await undefined,
   };
 }

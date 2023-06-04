@@ -23,6 +23,8 @@ function App() {
       });
   }, [session, isLoading]);
 
+  if (isLoading) return null;
+
   return (
     <div
       id="wrapper"
@@ -30,7 +32,7 @@ function App() {
     >
       <AppNavBar />
       <main className="mx-auto flex min-h-full w-full max-w-3xl p-4">
-        {isLoading ? null : <Outlet />}
+        <Outlet />
       </main>
     </div>
   );

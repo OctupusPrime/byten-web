@@ -87,7 +87,7 @@ const AiAutoCompleteModal = (props: AiAutoCompleteModalProps) => {
 
   const [isCustomPrompt, setIsCustomPromt] = useState(true);
 
-  const [responseData, setResponseData] = useState("");
+  const [responseData] = useState("");
 
   const { isLoading, isError, mutate } = useAiAutoComplete();
 

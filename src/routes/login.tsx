@@ -1,7 +1,15 @@
-import { Route } from "@tanstack/router";
+import { useEffect } from "react";
 import { rootRoute } from "./root";
+
+import { Route, useNavigate } from "@tanstack/router";
 import { useAuthContext } from "@context/AuthContext";
-import { GithubButton, GoogleButton } from "@features/login";
+
+import {
+  GithubButton,
+  GoogleButton,
+  useAuthStatusStore,
+} from "@features/login";
+import { LoadingOverlay } from "@mantine/core";
 
 export const loginRoute = new Route({
   getParentRoute: () => rootRoute,
@@ -10,26 +18,50 @@ export const loginRoute = new Route({
 });
 
 function Login() {
-  const { signInWithGoogle, session, signInWithGithub } = useAuthContext();
+  const navigate = useNavigate();
+  const { signInWithGoogle, signInWithGithub, session, isLoading } =
+    useAuthContext();
+
+  const [isRedirectLoading, setIsRedirectLoading] = useAuthStatusStore(
+    (state) => [state.isRedirectLoading, state.changeRedirectLoadingStatus]
+  );
+
+  useEffect(() => {
+    if (!isLoading && !session) setIsRedirectLoading(false);
+
+    if (session)
+      navigate({
+        to: "/app",
+      });
+  }, [session, isLoading]);
+
+  const handleSignInClick = (provider: () => void) => {
+    provider();
+    setIsRedirectLoading(true);
+  };
 
   return (
-    <div className="flex min-h-full">
-      <p className="pt-[30vh] text-center text-2xl font-medium">
-        Login to use app
-      </p>
-      <p>{session?.email}</p>
-      <div className="flex items-center">
-        <button
-          className="mx-auto mt-2 rounded-md bg-slate-200 p-2 text-lg"
-          onClick={signInWithGoogle}
-        >
-          Login
-        </button>
-      </div>
-      <div className="mx-auto mt-[30vh] h-auto w-full max-w-sm rounded border border-gray-400">
-        <div className="flex justify-center gap-2">
-          <GoogleButton onClick={signInWithGoogle} />
-          <GithubButton onClick={signInWithGithub} />
+    <div className="flex justify-center p-3">
+      <div className="relative mt-[30vh] w-full max-w-md rounded-lg border border-gray-200 p-6 dark:border-gray-700">
+        <LoadingOverlay visible={isRedirectLoading} />
+        <h2 className="text-lg font-medium dark:text-white">
+          Welcome to ByteN, login with
+        </h2>
+        <div className="mt-4 flex items-center gap-4">
+          <GoogleButton
+            radius="xl"
+            onClick={() => handleSignInClick(signInWithGoogle)}
+            className="flex-grow"
+          >
+            Google
+          </GoogleButton>
+          <GithubButton
+            radius="xl"
+            onClick={() => handleSignInClick(signInWithGithub)}
+            className="flex-grow"
+          >
+            Github
+          </GithubButton>
         </div>
       </div>
     </div>
