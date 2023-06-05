@@ -1,3 +1,3 @@
-type Locale = "en" | "ua" | "ru";
+type Locale = "en" | "uk" | "ru";
 
 export { type Locale };

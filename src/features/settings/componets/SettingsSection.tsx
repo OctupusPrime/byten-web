@@ -1,51 +1,31 @@
+import { clsx } from "@mantine/core";
 import { type ReactNode } from "react";
-import { twMerge } from "tailwind-merge";
 
 interface SettingsSectionProps {
-  title: string;
-  description?: string;
-  children?: ReactNode;
+  label: string;
+  children: ReactNode;
   classNames?: Partial<{
     root: string;
-    textWrapper: string;
-    title: string;
-    description: string;
+    label: string;
+    wrapper: string;
   }>;
 }
 
 const SettingsSection = (props: SettingsSectionProps) => {
-  const { children, classNames, title, description } = props;
+  const { label, children, classNames } = props;
 
   return (
-    <div
-      className={twMerge(
-        "mt-4 flex justify-between gap-2 items-center flex-col sm:flex-row",
-        classNames?.root
-      )}
-    >
-      <div className={twMerge("self-start", classNames?.textWrapper)}>
-        <h2
-          className={twMerge(
-            "text-lg font-medium dark:text-white",
-            classNames?.title
-          )}
-        >
-          {title}
-        </h2>
-
-        {description ? (
-          <p
-            className={twMerge(
-              "text-sm mt-1 dark:text-white",
-              classNames?.description
-            )}
-          >
-            Change app appearance.
-          </p>
-        ) : null}
-      </div>
-      {children}
-    </div>
+    <section className={clsx("my-3", classNames?.root)}>
+      <h2
+        className={clsx(
+          "mb-2 text-xl font-medium dark:text-white",
+          classNames?.label
+        )}
+      >
+        {label}
+      </h2>
+      <div className={clsx("space-y-3", classNames?.wrapper)}>{children}</div>
+    </section>
   );
 };
 

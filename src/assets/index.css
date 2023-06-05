@@ -1,3 +1,5 @@
+@import url("./md-editor.css");
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -10,24 +12,11 @@
     format("woff2");
 }
 
-.material-icon {
-  font-family: "Material Symbols Outlined";
-  font-weight: normal;
-  font-style: normal;
-  line-height: 1;
-  letter-spacing: normal;
-  text-transform: none;
-  display: inline-block;
-  white-space: nowrap;
-  word-wrap: normal;
-  direction: ltr;
-  -webkit-font-feature-settings: "liga";
-  font-feature-settings: "liga";
-  -webkit-font-smoothing: antialiased;
-  user-select: none;
-  font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24;
+:root {
+  --opsz-value: 24;
 }
 
+.material-icon,
 .material-icon-filled {
   font-family: "Material Symbols Outlined";
   font-weight: normal;
@@ -43,12 +32,32 @@
   font-feature-settings: "liga";
   -webkit-font-smoothing: antialiased;
   user-select: none;
-  font-variation-settings: "FILL" 1, "wght" 400, "GRAD" 0, "opsz" 24;
+}
+
+.material-icon {
+  font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0,
+    "opsz" var(--opsz-value);
+}
+
+.material-icon-filled {
+  font-variation-settings: "FILL" 1, "wght" 400, "GRAD" 0,
+    "opsz" var(--opsz-value);
+}
+
+.mantine-font {
+  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica,
+    Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji;
 }
 
 @layer base {
   html {
     @apply bg-white;
+  }
+
+  html,
+  body,
+  #root {
+    @apply h-full;
   }
 
   .dark {
@@ -58,7 +67,7 @@
 
 @layer components {
   .nav-link {
-    @apply flex gap-3 items-center p-2 rounded-md hover:bg-gray-50 dark:hover:bg-neutral-700 hover:text-blue-600 dark:text-gray-400 hover:dark:text-white;
+    @apply flex items-center gap-3 rounded-md p-2 hover:bg-gray-50 hover:text-blue-600 dark:text-gray-400 dark:hover:bg-neutral-700 hover:dark:text-white;
   }
 
   .nav-link-active {
@@ -70,11 +79,18 @@
   }
 
   .mobal-nav-link {
-    @apply flex h-20 w-20 gap-2 flex-col items-center justify-center dark:text-gray-400;
+    @apply flex h-20 w-20 flex-col items-center justify-center gap-2 dark:text-gray-400;
   }
 
   .mobal-nav-link-active span,
   .mobal-nav-link-active i {
     @apply text-blue-600 dark:text-white;
+  }
+
+  .md-toolbar-wrapper {
+    --opsz-value: 100;
+    border: 1px solid var(--md-editor-box-shadow-color);
+    border-left: none;
+    border-right: none;
   }
 }

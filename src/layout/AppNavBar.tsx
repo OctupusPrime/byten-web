@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/router";
 import { type IconsName } from "types/material-symbols";
-import Icon from "./Icon";
+import Icon from "../components/Icon";
 import { useAuthContext } from "@context/AuthContext";
 import { useTranslation } from "react-i18next";
 
@@ -8,16 +8,17 @@ interface LinkBtnProps {
   icon?: IconsName;
   title: string;
   to: string;
+  exact?: boolean;
 }
 
 const LinkBtn = (props: LinkBtnProps) => {
-  const { title, icon, to } = props;
+  const { title, icon, to, exact = true } = props;
 
   return (
     <Link
       to={to as any}
       activeOptions={{
-        exact: true,
+        exact,
       }}
       className={"nav-link"}
       activeProps={{
@@ -25,19 +26,19 @@ const LinkBtn = (props: LinkBtnProps) => {
       }}
     >
       {icon ? <Icon name={icon} /> : null}
-      <span className="font-medium text-sm">{title}</span>
+      <span className="text-sm font-medium">{title}</span>
     </Link>
   );
 };
 
 const MobalLinkBtn = (props: LinkBtnProps) => {
-  const { title, icon, to } = props;
+  const { title, icon, to, exact = true } = props;
 
   return (
     <Link
       to={to as any}
       activeOptions={{
-        exact: true,
+        exact,
       }}
       className={"mobal-nav-link"}
       activeProps={{
@@ -45,7 +46,7 @@ const MobalLinkBtn = (props: LinkBtnProps) => {
       }}
     >
       {icon ? <Icon name={icon} /> : null}
-      <span className="font-medium text-sm">{title}</span>
+      <span className="text-sm font-medium">{title}</span>
     </Link>
   );
 };
@@ -57,8 +58,8 @@ const AppNavBar = () => {
 
   return (
     <>
-      <div className="w-60 md:flex hidden fixed inset-y-0 left-0 bg-white dark:bg-neutral-800 border-r border-gray-200 dark:border-neutral-700 px-6 pb-4 flex-col gap-5">
-        <div className="h-16 flex items-center">
+      <aside className="fixed inset-y-0 left-0 hidden w-60 flex-col gap-5 border-r border-gray-200 bg-white px-6 pb-4 dark:border-neutral-700 dark:bg-neutral-800 md:flex">
+        <div className="flex h-16 items-center">
           <span className="text-xl font-bold text-black dark:text-gray-50">
             ByteN
           </span>
@@ -73,7 +74,12 @@ const AppNavBar = () => {
               />
             </li>
             <li>
-              <LinkBtn title={t("navbar.links.ai")} to="/app/ai" icon="robot" />
+              <LinkBtn
+                title={t("navbar.links.ai")}
+                to="/app/ai"
+                icon="magic_button"
+                exact={false}
+              />
             </li>
             <li>
               <LinkBtn
@@ -83,18 +89,18 @@ const AppNavBar = () => {
               />
             </li>
           </ul>
-          <ul className="border-t border-gray-200 dark:border-neutral-700 mt-auto pt-4 -mx-2">
+          <ul className="-mx-2 mt-auto border-t border-gray-200 pt-4 dark:border-neutral-700">
             <button className="nav-link w-full" onClick={signOut}>
               <Icon name={"logout"} />
-              <span className="font-medium text-sm">
+              <span className="text-sm font-medium">
                 {t("settings.actions.logout")}
               </span>
             </button>
           </ul>
         </nav>
-      </div>
+      </aside>
 
-      <div className="fixed md:hidden block inset-x-0 bottom-0 bg-white dark:bg-neutral-800 border-t border-gray-200  dark:border-neutral-700">
+      <aside className="fixed inset-x-0 bottom-0 z-20 block border-t border-gray-200 bg-white dark:border-neutral-700 dark:bg-neutral-800  md:hidden">
         <nav>
           <ul className="flex justify-between px-4">
             <li className="">
@@ -108,7 +114,8 @@ const AppNavBar = () => {
               <MobalLinkBtn
                 title={t("navbar.links.ai")}
                 to="/app/ai"
-                icon="robot"
+                icon="magic_button"
+                exact={false}
               />
             </li>
             <li>
@@ -120,7 +127,7 @@ const AppNavBar = () => {
             </li>
           </ul>
         </nav>
-      </div>
+      </aside>
     </>
   );
 };

@@ -1,5 +1,7 @@
-import { GoogleAuthProvider } from "firebase/auth";
+import { GoogleAuthProvider, GithubAuthProvider } from "firebase/auth";
 
 const googleProvider = new GoogleAuthProvider();
 
-export { googleProvider };
+const githubProvider = new GithubAuthProvider();
+
+export { googleProvider, githubProvider };

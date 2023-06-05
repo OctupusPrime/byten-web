@@ -1,14 +1,19 @@
+import { useEffect, useState } from "react";
 import { Route } from "@tanstack/router";
 import { appRoute } from ".";
+
 import {
   SettingsSection,
+  SettingsSectionItem,
   useLocalizationStore,
   useThemeStore,
 } from "@features/settings";
-import { SegmentedControl, Select } from "@mantine/core";
-import { Locale } from "types/i18n";
-import { useTranslation } from "react-i18next";
-import Icon from "@components/Icon";
+import { Avatar, Progress, SegmentedControl, Select } from "@mantine/core";
+
+import { getFileSize, humanFileSize } from "@utils/stringSize";
+
+import { useAuthContext } from "@context/AuthContext";
+import { useQueryClient } from "@tanstack/react-query";
 
 export const appSettingsRoute = new Route({
   getParentRoute: () => appRoute,
@@ -17,11 +22,14 @@ export const appSettingsRoute = new Route({
 });
 
 function Settings() {
-  const { i18n, t } = useTranslation();
+  const queryClient = useQueryClient();
+  const { session, signOut } = useAuthContext();
 
-  const [theme, setTheme] = useThemeStore((state) => [
-    state.state,
-    state.changeTheme,
+  const displayName = session?.displayName || session?.email || "Unknown";
+
+  const [appTheme, setAppTheme] = useThemeStore((state) => [
+    state.appTheme,
+    state.changeAppTheme,
   ]);
 
   const [localization, setLocalization] = useLocalizationStore((state) => [
@@ -29,43 +37,138 @@ function Settings() {
     state.changeLocale,
   ]);
 
-  const handleLocalizationChange = (lang: Locale) => {
-    setLocalization(lang);
+  const [cacheSize, setCacheSize] = useState({
+    percentage: 0,
+    displayValue: "0 B",
+  });
 
-    i18n.changeLanguage(lang);
-  };
+  useEffect(() => {
+    const updateCacheSize = () => {
+      const data = localStorage.getItem("REACT_QUERY_OFFLINE_CACHE");
+
+      const parsedData = data ? JSON.parse(data) : null;
+
+      if (!parsedData)
+        return {
+          percentage: 0,
+          displayValue: "0 B",
+        };
+
+      let stringCache = "";
+
+      if (parsedData?.clientState?.mutations?.length) {
+        stringCache += JSON.stringify(parsedData.clientState.mutations);
+      }
+      if (parsedData?.clientState?.queries?.length) {
+        stringCache += JSON.stringify(parsedData.clientState.queries);
+      }
+
+      if (!stringCache)
+        return {
+          percentage: 0,
+          displayValue: "0 B",
+        };
+
+      const fileSize = getFileSize(stringCache);
+
+      const percentage = (fileSize / 5_000_000) * 100; //Max 5 mb
+
+      setCacheSize({
+        percentage: percentage < 1 ? 1 : Math.round(percentage * 100) / 100,
+        displayValue: humanFileSize(fileSize),
+      });
+    };
+
+    updateCacheSize();
+  }, []);
 
   return (
-    <>
-      <h1 className="text-center text-2xl font-semibold mt-3 dark:text-white">
-        Settings
-      </h1>
+    <section className="w-full">
+      <div className="mb-4 flex items-center gap-4">
+        <Avatar size={"lg"} className="!rounded-full" src={session?.photoURL} />
+        <div className="min-w-0">
+          <h2 className="truncate text-2xl dark:text-white">{displayName}</h2>
+        </div>
+      </div>
 
-      <SettingsSection title="Theme" description="Change app appearance.">
-        <SegmentedControl
-          value={theme}
-          onChange={setTheme}
-          data={[
-            { label: "Light", value: "light" },
-            { label: "Auto", value: "auto" },
-            { label: "Dark", value: "dark" },
+      <SettingsSection label="Account">
+        <SettingsSectionItem title="Provider" description="Google" />
+        <SettingsSectionItem title="Email" description={session?.email ?? ""} />
+      </SettingsSection>
+      <SettingsSection label="Appirience">
+        <SettingsSectionItem.Action
+          title="Theme"
+          description="Change app appearance."
+        >
+          <SegmentedControl
+            value={appTheme}
+            onChange={setAppTheme}
+            data={[
+              { label: "Light", value: "light" },
+              { label: "Auto", value: "auto" },
+              { label: "Dark", value: "dark" },
+            ]}
+            classNames={{
+              root: "mt-2 sm:mt-0",
+            }}
+          />
+        </SettingsSectionItem.Action>
+        <SettingsSectionItem.Action
+          title="Theme"
+          description="Change app appearance."
+        >
+          <Select
+            value={localization}
+            onChange={setLocalization}
+            data={[
+              { value: "en", label: "English (US)" },
+              { value: "uk", label: "Українська (UA)" },
+              { value: "ru", label: "Русcкий (RU)" },
+            ]}
+          />
+        </SettingsSectionItem.Action>
+      </SettingsSection>
+      <SettingsSection label="Storage">
+        <Progress
+          size={20}
+          sections={[
+            {
+              value: cacheSize.percentage,
+              color: "blue",
+              label:
+                cacheSize.percentage > 10
+                  ? cacheSize.percentage + "%"
+                  : undefined,
+            },
           ]}
-          classNames={{
-            root: "mt-2 sm:mt-0",
+        />
+        <div className="flex items-center gap-2 dark:text-white">
+          <div className="h-4 w-4 rounded-full bg-[#228be6]" />
+          <span className="text-sm">Cache</span>
+          <span className="text-sm font-medium">{cacheSize.displayValue}</span>
+        </div>
+        <SettingsSectionItem
+          title="Clear cache"
+          description={"Not enoth space? Clear app cache."}
+          onClick={() => {
+            queryClient.clear();
+            setCacheSize({
+              percentage: 0,
+              displayValue: "0 B",
+            });
           }}
         />
       </SettingsSection>
-      <SettingsSection title="Localization">
-        <Select
-          value={localization}
-          onChange={handleLocalizationChange}
-          data={[
-            { value: "en", label: "English (US)" },
-            { value: "ua", label: "Українська (UA)" },
-            { value: "ru", label: "Русcкий (RU)" },
-          ]}
+      <SettingsSection label="About ByteN">
+        <SettingsSectionItem title="Version" description={"0.1"} />
+      </SettingsSection>
+      <SettingsSection label="All other">
+        <SettingsSectionItem
+          title="Exit"
+          description={`Logged in as ${displayName}`}
+          onClick={signOut}
         />
       </SettingsSection>
-    </>
+    </section>
   );
 }

@@ -14,7 +14,7 @@
         const storeThemeState = localStorage.getItem("theme");
 
         var theme = storeThemeState
-          ? JSON.parse(storeThemeState).state.state
+          ? JSON.parse(storeThemeState).state.appTheme
           : "auto";
 
         if (
