@@ -3,7 +3,7 @@ import { initReactI18next } from "react-i18next";
 
 import enTranslation from "@data/i18n/en/translation.json";
 import ruTranslation from "@data/i18n/ru/translation.json";
-import uaTranslation from "@data/i18n/ua/translation.json";
+import ukTranslation from "@data/i18n/uk/translation.json";
 
 export const resources = {
   en: {
@@ -12,8 +12,8 @@ export const resources = {
   ru: {
     translation: ruTranslation,
   },
-  ua: {
-    translation: uaTranslation,
+  uk: {
+    translation: ukTranslation,
   },
 };
 

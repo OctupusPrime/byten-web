@@ -1,0 +1,14 @@
+{
+  "navbar": {
+    "links": {
+      "dashboard": "ewqewq",
+      "ai": "Ai",
+      "settings": "Настройки"
+    }
+  },
+  "settings": {
+    "actions": {
+      "logout": "Выйти"
+    }
+  }
+}

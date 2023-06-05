@@ -1,9 +1,11 @@
 import { useEffect } from "react";
+import dayjs from "@lib/dayjs";
 
 import { useLocalizationStore, useThemeStore } from "@features/settings";
 import { useTranslation } from "react-i18next";
 
 import { getThemeValue } from "@utils/theme";
+
 const AppSettingsProvider = () => {
   const { i18n } = useTranslation();
 
@@ -40,6 +42,7 @@ const AppSettingsProvider = () => {
 
   useEffect(() => {
     i18n.changeLanguage(localization);
+    dayjs.locale(localization);
   }, [localization]);
 
   return null;

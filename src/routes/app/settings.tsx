@@ -6,6 +6,9 @@ import {
   useThemeStore,
 } from "@features/settings";
 import { SegmentedControl, Select } from "@mantine/core";
+import dayjs from "dayjs";
+import { useTranslation } from "react-i18next";
+import { useMemo } from "react";
 
 export const appSettingsRoute = new Route({
   getParentRoute: () => appRoute,
@@ -14,6 +17,8 @@ export const appSettingsRoute = new Route({
 });
 
 function Settings() {
+  const { i18n } = useTranslation();
+
   const [appTheme, setAppTheme] = useThemeStore((state) => [
     state.appTheme,
     state.changeAppTheme,
@@ -23,6 +28,10 @@ function Settings() {
     state.state,
     state.changeLocale,
   ]);
+
+  const time = useMemo(() => {
+    return dayjs().format("MMMM");
+  }, [i18n.language]);
 
   return (
     <section className="w-full">
@@ -50,11 +59,12 @@ function Settings() {
           onChange={setLocalization}
           data={[
             { value: "en", label: "English (US)" },
-            { value: "ua", label: "Українська (UA)" },
+            { value: "uk", label: "Українська (UA)" },
             { value: "ru", label: "Русcкий (RU)" },
           ]}
         />
       </SettingsSection>
+      <p className="text-white">{time}</p>
     </section>
   );
 }
