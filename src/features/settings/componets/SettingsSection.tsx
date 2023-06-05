@@ -2,50 +2,30 @@ import { clsx } from "@mantine/core";
 import { type ReactNode } from "react";
 
 interface SettingsSectionProps {
-  title: string;
-  description?: string;
-  children?: ReactNode;
+  label: string;
+  children: ReactNode;
   classNames?: Partial<{
     root: string;
-    textWrapper: string;
-    title: string;
-    description: string;
+    label: string;
+    wrapper: string;
   }>;
 }
 
 const SettingsSection = (props: SettingsSectionProps) => {
-  const { children, classNames, title, description } = props;
+  const { label, children, classNames } = props;
 
   return (
-    <div
-      className={clsx(
-        "mt-4 flex flex-col items-center justify-between gap-2 sm:flex-row",
-        classNames?.root
-      )}
-    >
-      <div className={clsx("self-start", classNames?.textWrapper)}>
-        <h2
-          className={clsx(
-            "text-lg font-medium dark:text-white",
-            classNames?.title
-          )}
-        >
-          {title}
-        </h2>
-
-        {description ? (
-          <p
-            className={clsx(
-              "mt-1 text-sm dark:text-white",
-              classNames?.description
-            )}
-          >
-            Change app appearance.
-          </p>
-        ) : null}
-      </div>
-      {children}
-    </div>
+    <section className={clsx("my-3", classNames?.root)}>
+      <h2
+        className={clsx(
+          "mb-2 text-xl font-medium dark:text-white",
+          classNames?.label
+        )}
+      >
+        {label}
+      </h2>
+      <div className={clsx("space-y-3", classNames?.wrapper)}>{children}</div>
+    </section>
   );
 };
 

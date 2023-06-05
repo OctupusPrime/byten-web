@@ -87,12 +87,15 @@ const AiAutoCompleteModal = (props: AiAutoCompleteModalProps) => {
 
   const [isCustomPrompt, setIsCustomPromt] = useState(true);
 
-  const [responseData] = useState("");
+  const [responseData, setResponseData] = useState("");
 
   const { isLoading, isError, mutate } = useAiAutoComplete();
 
   const submit: SubmitHandler<FormSchemaType> = () => {
     mutate();
+    // setResponseData(
+    //   "| City | Population | Country | Language |\n|------|------------|---------|----------|\n| New York | 8,336,817 | United States | English |\n| Tokyo | 13,515,271 | Japan | Japanese |\n| Mumbai | 12,478,447 | India | Hindi |\n| Sao Paulo | 12,106,920 | Brazil | Portuguese |\n| Shanghai | 24,281,000 | China | Mandarin |\n| Moscow | 12,615,279 | Russia | Russian |\n| Istanbul | 15,029,231 | Turkey | Turkish |\n| Paris | 2,148,271 | France | French |\n| London | 8,908,081 | United Kingdom | English |\n| Los Angeles | 3,979,576 | United States | English |"
+    // );
   };
 
   const handleSubmitModal = () => {

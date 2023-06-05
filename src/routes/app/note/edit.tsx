@@ -83,7 +83,7 @@ function EditNote() {
 
   return (
     <section className="flex w-full flex-col">
-      <div className="sticky top-0 z-10 -mx-1 -mt-1 flex justify-between bg-white px-1 py-2 dark:bg-neutral-900">
+      <div className="sticky top-0 z-10 -mx-1 -mt-2 flex justify-between bg-white px-1 py-2 dark:bg-neutral-900">
         <ActionIcon size="lg" variant="light" onClick={navigateBack}>
           <Icon
             name="arrow_back"
