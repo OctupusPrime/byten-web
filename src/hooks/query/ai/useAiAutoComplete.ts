@@ -3,8 +3,15 @@ import { useMutation } from "@tanstack/react-query";
 
 import { notifications } from "@mantine/notifications";
 
-const reqAutoComplete = async () => {
-  const { data } = await axiosInstance.post("/ai-auto-complete");
+import { type ChatGptResponse } from "types/data/chatGpt";
+
+type ReqBody = { state?: string; prompt: string };
+
+const reqAutoComplete = async (body: ReqBody) => {
+  const { data } = await axiosInstance.post<ChatGptResponse>(
+    "/ai-auto-complete",
+    body
+  );
 
   return data;
 };
@@ -12,9 +19,6 @@ const reqAutoComplete = async () => {
 export default function useAiAutoComplete() {
   return useMutation({
     mutationFn: reqAutoComplete,
-    onSuccess: (data) => {
-      console.log("ai-response", data);
-    },
     onError: () => {
       notifications.show({
         title: "Cannot get responce from chatgpt",
