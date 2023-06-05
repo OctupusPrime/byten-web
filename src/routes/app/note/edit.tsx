@@ -3,7 +3,6 @@ import { Route, useNavigate, useParams } from "@tanstack/router";
 import { appRoute } from "../";
 
 import { z } from "zod";
-import { notifications } from "@mantine/notifications";
 import { useSetState } from "@mantine/hooks";
 import type { NoteItem } from "types/data/notes";
 
@@ -47,11 +46,6 @@ function EditNote() {
 
   const { data, isSuccess } = useGetNoteById(params.id + "", {
     onError: () => {
-      notifications.show({
-        title: "Cannot load note",
-        message: "Try again later",
-        color: "red",
-      });
       return navigate({
         to: "/app",
       });
@@ -66,15 +60,7 @@ function EditNote() {
     parsedData,
     (data) => {
       if (!data.id || !data.title) return;
-      mutate(data, {
-        onError: () => {
-          notifications.show({
-            title: "Cannot update note",
-            message: "Try again later",
-            color: "red",
-          });
-        },
-      });
+      mutate(data);
     },
     1000
   );

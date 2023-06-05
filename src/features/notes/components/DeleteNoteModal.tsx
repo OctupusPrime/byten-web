@@ -3,7 +3,6 @@ import DeleteConformationModal, {
 } from "@components/Modals/DeleteConformationModal";
 
 import useDeleteNote from "@hooks/query/notes/useDeleteNote";
-import { notifications } from "@mantine/notifications";
 
 import type { NoteItem } from "types/data/notes";
 
@@ -28,13 +27,6 @@ const DeleteNoteModal = (props: NoteDeleteModalProps) => {
       onSuccess: () => {
         onClose();
         onSuccess?.();
-      },
-      onError: () => {
-        notifications.show({
-          title: "Cannot delete note",
-          message: "Try again later",
-          color: "red",
-        });
       },
     });
   };

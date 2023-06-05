@@ -2,6 +2,8 @@ import axiosInstance from "@lib/axios";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import type { aiItem } from "types/data/ai";
 
+import { notifications } from "@mantine/notifications";
+
 const reqDeletePrompt = async (item: aiItem) => {
   const { data } = await axiosInstance.delete<aiItem>(
     `ai-prompts/${item.id}?type=${item.type}`
@@ -29,6 +31,12 @@ export default function useDeletePrompt() {
       );
     },
     onError: (_error, _variables, context) => {
+      notifications.show({
+        title: "Cannot delete prompt",
+        message: "Try again later",
+        color: "red",
+      });
+
       if (!context) return;
 
       queryClient.invalidateQueries({ queryKey: context.queryKey });

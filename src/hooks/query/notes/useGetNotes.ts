@@ -1,4 +1,5 @@
 import axiosInstance from "@lib/axios";
+import { notifications } from "@mantine/notifications";
 import { useQuery } from "@tanstack/react-query";
 
 import { NoteItemApi } from "types/data/notes";
@@ -19,5 +20,14 @@ export default function useGetNotes(
     queryKey: ["notes"],
     queryFn: reqNotes,
     ...options,
+    onError: (err) => {
+      notifications.show({
+        title: "Cannot load notes",
+        message: "Try again later",
+        color: "red",
+      });
+
+      options?.onError?.(err);
+    },
   });
 }

@@ -70,7 +70,12 @@ export const AuthContextProvider = ({ children }: AuthContextProps) => {
       })
       .catch((err: FirebaseError) => {
         if (err.code !== "auth/account-exists-with-different-credential")
-          return;
+          return notifications.show({
+            title: "Cannot authorize account",
+            message: "Try again later.",
+            color: "red",
+            autoClose: false,
+          });
 
         if (!err.customData)
           return notifications.show({

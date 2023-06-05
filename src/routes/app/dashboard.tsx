@@ -23,7 +23,6 @@ import parseNotesFromApi from "@utils/parseNotesFromApi";
 import dayjs from "@lib/dayjs";
 import CreateNoteModal from "@features/notes/components/CreateNoteModal";
 import useCreateNote from "@hooks/query/notes/useCreateNote";
-import { notifications } from "@mantine/notifications";
 
 export const appDashboardRoute = new Route({
   getParentRoute: () => appRoute,
@@ -107,13 +106,6 @@ function Dashboard() {
     mutate(newTodayNote.title, {
       onSuccess: (data) => {
         handleOpenNote(data as any);
-      },
-      onError: () => {
-        notifications.show({
-          title: "Cannot create note",
-          message: "Try again later",
-          color: "red",
-        });
       },
     });
   };

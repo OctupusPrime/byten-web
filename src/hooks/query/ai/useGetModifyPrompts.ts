@@ -3,6 +3,8 @@ import { useQuery } from "@tanstack/react-query";
 import { aiItem } from "types/data/ai";
 import { type QueryOptions } from "types/queryHooks";
 
+import { notifications } from "@mantine/notifications";
+
 export type ModifyPromptsData = aiItem[];
 
 export const reqModifyPrompts = async () => {
@@ -19,7 +21,15 @@ export default function useGetModifyPrompts(
   return useQuery({
     queryKey: ["ai", "text-modify"],
     queryFn: reqModifyPrompts,
-    retry: 3,
     ...options,
+    onError: (err) => {
+      notifications.show({
+        title: "Cannot load modify prompts",
+        message: "Try again later",
+        color: "red",
+      });
+
+      options?.onError?.(err);
+    },
   });
 }

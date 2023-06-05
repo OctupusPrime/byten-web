@@ -2,7 +2,7 @@ import DeleteConformationModal, {
   type DeleteConformationModalProps,
 } from "@components/Modals/DeleteConformationModal";
 import useDeletePrompt from "@hooks/query/ai/useDeletePrompt";
-import { notifications } from "@mantine/notifications";
+
 import type { aiItem } from "types/data/ai";
 
 export interface AiItemDeleteModalProps
@@ -26,13 +26,6 @@ const AiItemDeleteModal = (props: AiItemDeleteModalProps) => {
       onSuccess: () => {
         onClose();
         onSuccess?.();
-      },
-      onError: () => {
-        notifications.show({
-          title: "Cannot delete prompt",
-          message: "Try again later",
-          color: "red",
-        });
       },
     });
   };

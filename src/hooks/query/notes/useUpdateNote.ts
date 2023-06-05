@@ -1,8 +1,11 @@
 import axiosInstance from "@lib/axios";
+
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import parseNotesFromApi from "@utils/parseNotesFromApi";
 import type { Dayjs } from "dayjs";
 import type { NoteItemApi } from "types/data/notes";
+
+import { notifications } from "@mantine/notifications";
 
 type NoteItemReq = {
   id: string;
@@ -69,6 +72,12 @@ export default function useUpdateNote() {
       return { previusData, previusArrData };
     },
     onError: (_err, _item, context) => {
+      notifications.show({
+        title: "Cannot update note",
+        message: "Try again later",
+        color: "red",
+      });
+
       if (!context) return;
 
       queryClient.setQueryData(["notes"], context.previusArrData);
@@ -77,7 +86,7 @@ export default function useUpdateNote() {
         context.previusData
       );
     },
-    onSettled(_data, _error, _variables, context) {
+    onSettled: (_data, _error, _variables, context) => {
       if (!context) return;
 
       queryClient.invalidateQueries({ queryKey: ["notes"] });

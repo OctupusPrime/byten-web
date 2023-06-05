@@ -12,7 +12,6 @@ import { z } from "zod";
 import { type SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect } from "react";
-import { notifications } from "@mantine/notifications";
 import useCreatePrompt from "@hooks/query/ai/useCreatePrompt";
 import useUpdatePrompt from "@hooks/query/ai/useUpdatePrompt";
 
@@ -74,13 +73,6 @@ const AiItemCreateOrEditModal = (props: AiItemCreateOrEditModalProps) => {
           onSuccess: () => {
             onClose();
           },
-          onError: () => {
-            notifications.show({
-              title: "Cannot update prompt",
-              message: "Try again later",
-              color: "red",
-            });
-          },
         }
       );
     } else {
@@ -92,13 +84,6 @@ const AiItemCreateOrEditModal = (props: AiItemCreateOrEditModalProps) => {
         {
           onSuccess: () => {
             onClose();
-          },
-          onError: () => {
-            notifications.show({
-              title: "Cannot create prompt",
-              message: "Try again later",
-              color: "red",
-            });
           },
         }
       );

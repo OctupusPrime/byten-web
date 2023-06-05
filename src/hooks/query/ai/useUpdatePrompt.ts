@@ -2,6 +2,8 @@ import axiosInstance from "@lib/axios";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import type { aiItem } from "types/data/ai";
 
+import { notifications } from "@mantine/notifications";
+
 const reqUpdatePrompt = async (item: aiItem) => {
   const { data } = await axiosInstance.put<aiItem>(
     `ai-prompts/${item.id}`,
@@ -34,11 +36,17 @@ export default function useUpdatePrompt() {
       return { previusData, queryKey };
     },
     onError: (_err, _item, context) => {
+      notifications.show({
+        title: "Cannot update prompt",
+        message: "Try again later",
+        color: "red",
+      });
+
       if (!context) return;
 
       queryClient.setQueriesData(context.queryKey, context.previusData);
     },
-    onSettled(_data, _error, _variables, context) {
+    onSettled: (_data, _error, _variables, context) => {
       if (!context) return;
 
       queryClient.invalidateQueries({ queryKey: context.queryKey });

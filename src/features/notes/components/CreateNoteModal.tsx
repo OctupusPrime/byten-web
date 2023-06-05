@@ -6,7 +6,6 @@ import type { NoteItemApi } from "types/data/notes";
 import { Modal, Textarea, type ModalProps, Button } from "@mantine/core";
 
 import useCreateNote from "@hooks/query/notes/useCreateNote";
-import { notifications } from "@mantine/notifications";
 
 const FormSchema = z.object({
   title: z.string().min(1),
@@ -37,13 +36,6 @@ const CreateNoteModal = (props: CreateNoteModalProps) => {
       onSuccess: (data) => {
         onSuccess?.(data);
         onClose();
-      },
-      onError: () => {
-        notifications.show({
-          title: "Cannot create note",
-          message: "Try again later",
-          color: "red",
-        });
       },
     });
   };

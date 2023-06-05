@@ -3,7 +3,6 @@ import { appRoute } from "../";
 
 import { z } from "zod";
 import { Suspense, lazy, useMemo } from "react";
-import { notifications } from "@mantine/notifications";
 
 import { ActionIcon, Skeleton } from "@mantine/core";
 import Icon from "@components/Icon";
@@ -37,11 +36,6 @@ function Note() {
 
   const { data } = useGetNoteById(params.id + "", {
     onError: () => {
-      notifications.show({
-        title: "Cannot load note",
-        message: "Try again later",
-        color: "red",
-      });
       navigateBack();
     },
   });

@@ -1,7 +1,8 @@
 import axiosInstance from "@lib/axios";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-
 import type { NoteItem, NoteItemApi } from "types/data/notes";
+
+import { notifications } from "@mantine/notifications";
 
 const reqDeleteNote = async (item: NoteItem) => {
   const { data } = await axiosInstance.delete<NoteItemApi>(`notes/${item.id}`);
@@ -23,6 +24,12 @@ export default function useDeleteNote() {
       );
     },
     onError: () => {
+      notifications.show({
+        title: "Cannot delete note",
+        message: "Try again later",
+        color: "red",
+      });
+
       queryClient.invalidateQueries({ queryKey: ["notes"] });
     },
   });

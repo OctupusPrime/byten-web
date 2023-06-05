@@ -1,7 +1,8 @@
 import axiosInstance from "@lib/axios";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-
 import type { NoteItemApi } from "types/data/notes";
+
+import { notifications } from "@mantine/notifications";
 
 const reqCreateNote = async (title: string) => {
   const { data } = await axiosInstance.post<NoteItemApi>("notes", {
@@ -16,10 +17,17 @@ export default function useCreateNote() {
 
   return useMutation({
     mutationFn: reqCreateNote,
-    onSuccess(data) {
+    onSuccess: (data) => {
       queryClient.setQueryData(["note", data.id], () => data);
     },
-    onSettled() {
+    onError: () => {
+      notifications.show({
+        title: "Cannot create note",
+        message: "Try again later",
+        color: "red",
+      });
+    },
+    onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ["notes"] });
     },
   });
