@@ -1,11 +1,10 @@
 import { Outlet, RootRoute } from "@tanstack/router";
-import React from "react";
-import { RouterContext } from "src/router";
+import { lazy } from "react";
 
 const TanStackRouterDevtools =
   process.env.NODE_ENV === "production"
     ? () => null // Render nothing in production
-    : React.lazy(() =>
+    : lazy(() =>
         // Lazy load in development
         import("@tanstack/router-devtools").then((res) => ({
           default: res.TanStackRouterDevtools,
@@ -14,28 +13,12 @@ const TanStackRouterDevtools =
         }))
       );
 
-export const rootRoute = RootRoute.withRouterContext<RouterContext>()({
+export const rootRoute = new RootRoute({
   component: () => {
     return (
       <>
-        {/* <Link
-          to={"/app/settings"}
-          className={`block py-2 px-3 text-blue-700`}
-          // Make "active" links bold
-          activeProps={{ className: `font-bold` }}
-        >
-          Login
-        </Link>
-        <Link
-          to={"/app"}
-          className={`block py-2 px-3 text-blue-700`}
-          // Make "active" links bold
-          activeProps={{ className: `font-bold` }}
-        >
-          App
-        </Link> */}
         <Outlet />
-        <TanStackRouterDevtools position="bottom-right" />
+        <TanStackRouterDevtools position="bottom-left" />
       </>
     );
   },

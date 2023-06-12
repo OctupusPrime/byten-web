@@ -1,24 +1,31 @@
-import { changeTheme } from "@utils/theme";
+import { changeTheme, getThemeValue } from "@utils/theme";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
-type Theme = "light" | "auto" | "dark";
+type AppTheme = "light" | "auto" | "dark";
+type Theme = "light" | "dark";
 
 interface ThemeState {
-  state: Theme;
+  appTheme: AppTheme;
+  changeAppTheme: (val: AppTheme) => void;
+  theme: Theme;
   changeTheme: (val: Theme) => void;
 }
 
 const useThemeStore = create<ThemeState>()(
   persist(
     (set) => ({
-      state: "auto",
-      changeTheme: (val) =>
-        // eslint-disable-next-line
+      appTheme: "auto",
+      changeAppTheme: (val) =>
         set((_state) => {
           changeTheme(val);
 
-          return { state: val };
+          return { appTheme: val, theme: getThemeValue(val) };
+        }),
+      theme: "dark",
+      changeTheme: (val) =>
+        set((_state) => {
+          return { theme: val };
         }),
     }),
     {

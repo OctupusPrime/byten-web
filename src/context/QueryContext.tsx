@@ -1,13 +1,13 @@
-import React from "react";
+// import React from "react";
 import { createSyncStoragePersister } from "@tanstack/query-sync-storage-persister";
-import { type QueryClient } from "@tanstack/react-query";
+import { QueryClient } from "@tanstack/react-query";
 import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client";
-import { type ReactNode } from "react";
+import { lazy, type ReactNode } from "react";
 
 const ReactQueryDevtools =
   process.env.NODE_ENV === "production"
     ? () => null // Render nothing in production
-    : React.lazy(() =>
+    : lazy(() =>
         // Lazy load in development
         import("@tanstack/react-query-devtools").then((res) => ({
           default: res.ReactQueryDevtools,
@@ -16,26 +16,27 @@ const ReactQueryDevtools =
         }))
       );
 
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false,
+
+      cacheTime: 1000 * 60 * 60 * 24, // 24 hours
+      staleTime: 1000 * 60 * 60, // 1 hour
+      retry: 3,
+    },
+  },
+});
+
 const persister = createSyncStoragePersister({
   storage: window.localStorage,
 });
 
-// const queryClient = new QueryClient({
-//   defaultOptions: {
-//     queries: {
-//       cacheTime: 1000 * 60 * 60 * 24, // 24 hours
-//       staleTime: 2000,
-//       retry: 0,
-//     },
-//   },
-// });
-
 interface QueryContextProps {
   children: ReactNode;
-  queryClient: QueryClient;
 }
 
-const QueryContextProvider = ({ children, queryClient }: QueryContextProps) => {
+const QueryContextProvider = ({ children }: QueryContextProps) => {
   return (
     <PersistQueryClientProvider
       client={queryClient}
@@ -48,7 +49,7 @@ const QueryContextProvider = ({ children, queryClient }: QueryContextProps) => {
       }}
     >
       {children}
-      <ReactQueryDevtools />
+      <ReactQueryDevtools position="bottom-right" />
     </PersistQueryClientProvider>
   );
 };
